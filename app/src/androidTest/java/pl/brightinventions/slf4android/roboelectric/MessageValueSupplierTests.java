@@ -2,6 +2,7 @@ package pl.brightinventions.slf4android.roboelectric;
 
 import org.junit.Test;
 
+import java.util.IllegalFormatException;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -18,16 +19,6 @@ public class MessageValueSupplierTests extends RoboelectricTest {
         assertThat(message, is(equalTo("simple message")));
     }
 
-    @Test
-    public void canProvideValueOfSimpleMessageWithOneArgument() throws Exception {
-        assertThat(value("message {}", "arg"), is(equalTo("message arg")));
-    }
-
-    @Test
-    public void canProvideValueOfSimpleMessageWithTwoArguments() throws Exception {
-        assertThat(value("message {} {}", "arg1 arg2"), is(equalTo("message arg1 arg2")));
-    }
-
     String value(String message, Object... args) {
         MessageValueSupplier messageValueSupplier = new MessageValueSupplier();
         StringBuilder builder = new StringBuilder();
@@ -35,5 +26,32 @@ public class MessageValueSupplierTests extends RoboelectricTest {
         record.setParameters(args);
         messageValueSupplier.append(record, builder);
         return builder.toString();
+    }
+
+    @Test
+    public void canProvideValueOfSimpleMessageWithOneArgument() throws Exception {
+        assertThat(value("message {}", "arg"), is(equalTo("message arg")));
+    }
+
+    @Test
+    public void canProvideValueOfSimpleMessageWithTwoArguments() throws Exception {
+        assertThat(value("message {} {}", "arg1", "arg2"), is(equalTo("message arg1 arg2")));
+    }
+
+    @Test
+    public void canProvideValueOfSimpleMessageWithManyArguments() throws Exception {
+        assertThat(value("message {} and {} and {}", "arg1", "arg2", "arg3"), is(equalTo("message arg1 and arg2 and arg3")));
+    }
+
+    @Test
+    public void canAppendExceptionInformationAtTheEndOfMessage() throws Exception {
+        assertThat(value("message", new NullPointerException()), containsString("message"));
+        assertThat(value("message", new NullPointerException()), containsString("NullPointerException"));
+    }
+
+    @Test
+    public void canProvideFormattedValueWithExceptionInformationAtTheEndOfMessage() throws Exception {
+        assertThat(value("message {}", "arg", new NullPointerException()), containsString("message arg"));
+        assertThat(value("message {}", new NullPointerException()), containsString("NullPointerException"));
     }
 }

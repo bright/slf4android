@@ -34,7 +34,8 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         for (Handler handler : Arrays.asList(rootLogger.getHandlers())) {
             rootLogger.removeHandler(handler);
         }
-        rootLogger.addHandler(new LogcatHandler());
+        HandlerFormatterCompiler compiler = new HandlerFormatterCompiler(configuration);
+        rootLogger.addHandler(new LogcatHandler(compiler.compile("%message")));
     }
 
     public void registerPattern(String pattern, LoggerPatternValueSupplier valueSupplier) {

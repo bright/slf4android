@@ -26,6 +26,11 @@ import java.util.logging.LogRecord;
 
 public class LogcatHandler extends Handler {
 
+    private final LogRecordFormatter logRecordFormatter;
+
+    public LogcatHandler(LogRecordFormatter logRecordFormatter) {
+        this.logRecordFormatter = logRecordFormatter;
+    }
 
     @Override
     public void close() {
@@ -41,7 +46,7 @@ public class LogcatHandler extends Handler {
         String tag = record.getLoggerName();
 
         try {
-            String message = record.getMessage();
+            String message = logRecordFormatter.format(record);
             Log.println(level, tag, message);
         } catch (RuntimeException e) {
             Log.e("LogcatHandler", "Error logging message.", e);
