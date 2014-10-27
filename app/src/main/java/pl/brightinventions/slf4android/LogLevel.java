@@ -18,4 +18,8 @@ public enum LogLevel {
     public Level getUtilLogLevel() {
         return utilLogLevel;
     }
+
+    public boolean isSmallerOrEqualTo(Level level) {
+        return utilLogLevel.intValue() <= level.intValue();
+    }
 }

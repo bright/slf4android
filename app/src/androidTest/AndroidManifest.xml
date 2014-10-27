@@ -6,6 +6,9 @@
         <meta-data
             android:name="ignore"
             android:value="ignore"/>
+
+        <activity android:name=".androidTest.TestActivity"/>
+
         <activity
             android:name=".NotifyDevDialogDisplayActivity"
             android:theme="@android:style/Theme.NoDisplay"/>

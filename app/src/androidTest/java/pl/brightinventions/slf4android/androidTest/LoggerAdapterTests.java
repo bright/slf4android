@@ -14,9 +14,6 @@ import java.util.logging.LogManager;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
 public class LoggerAdapterTests extends AndroidTestCase {
 
     public static final String LOGGER_NAME = "ApplicationTest";
