@@ -2,8 +2,8 @@
     package="pl.brightinventions.slf4android"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application>
-        <meta-data
+    <application android:allowBackup="true">
+    <meta-data
             android:name="ignore"
             android:value="ignore"/>
         <activity
