@@ -8,11 +8,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogRecord;
 
 public class NotifyDevDialogDisplayActivity extends Activity {
+    private static final Logger LOG = LoggerFactory.getLogger(NotifyDevDialogDisplayActivity.class.getSimpleName());
     private static final MessageValueSupplier messageFormatter = new MessageValueSupplier();
     private AlertDialog dialog;
 
@@ -34,33 +38,24 @@ public class NotifyDevDialogDisplayActivity extends Activity {
         return showDialogIn(activityContext, getMessage(record), emailAddresses, null);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        String log_record = (String) getIntent().getSerializableExtra("log_record");
-        List<String> emailAddresses = (List<String>) getIntent().getSerializableExtra("email_addresses");
-        if (log_record != null) {
-            dialog = showDialogIn(this, log_record, emailAddresses, new Disposable() {
-                @Override
-                public void dispose() {
-                    finish();
-                }
-            });
-        } else {
-            finish();
-        }
-    }
-
     private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, final Disposable onDialogClose) {
+        final EmailErrorReport emailErrorReport = new EmailErrorReport(message, emailAddresses);
+        final ReadLogcatEntriesAsyncTask readLogcatEntries = new ReadLogcatEntriesAsyncTask();
+        readLogcatEntries.execute(activityContext);
+        emailErrorReport.addFileAttachmentFrom(readLogcatEntries);
+        String shortMessage = message;
+        int end = message.indexOf("\n");
+        if (end > 0) {
+            shortMessage = message.substring(0, end);
+        }
         AlertDialog alertDialog = new AlertDialog.Builder(activityContext)
                 .setTitle("Notify developer about error?")
-                .setMessage(message)
+                .setMessage(shortMessage)
                 .setCancelable(true)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendEmailWithError(activityContext, message, emailAddresses);
+                        sendEmailWithError(activityContext, emailErrorReport);
                         dialog.dismiss();
                         if (onDialogClose != null) {
                             onDialogClose.dispose();
@@ -81,18 +76,37 @@ public class NotifyDevDialogDisplayActivity extends Activity {
         return alertDialog;
     }
 
-    private static void sendEmailWithError(Context activityContext, String message, List<String> emailAddresses) {
+    private static void sendEmailWithError(Context activityContext, EmailErrorReport emailErrorReport) {
         Intent sendEmail = new Intent(Intent.ACTION_SEND);
         sendEmail.setType("message/rfc822");
-        String[] emails = new String[emailAddresses.size()];
-        emailAddresses.toArray(emails);
-        sendEmail.putExtra(Intent.EXTRA_EMAIL, emails);
-        sendEmail.putExtra(Intent.EXTRA_SUBJECT, "Error in " + activityContext.getPackageName());
-        sendEmail.putExtra(Intent.EXTRA_TEXT, "Please provide a description of an error: " + message);
+
+        emailErrorReport.configureRecipients(sendEmail);
+        emailErrorReport.configureSubject(sendEmail, activityContext);
+        emailErrorReport.configureMessage(sendEmail);
+        emailErrorReport.configureAttachments(sendEmail);
+
         try {
             activityContext.startActivity(Intent.createChooser(sendEmail, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(activityContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String log_record = (String) getIntent().getSerializableExtra("log_record");
+        List<String> emailAddresses = (List<String>) getIntent().getSerializableExtra("email_addresses");
+        if (log_record != null) {
+            dialog = showDialogIn(this, log_record, emailAddresses, new Disposable() {
+                @Override
+                public void dispose() {
+                    finish();
+                }
+            });
+        } else {
+            finish();
         }
     }
 
