@@ -22,15 +22,17 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         compiler = new HandlerFormatterCompiler(this);
     }
 
-    public static synchronized LoggerConfiguration configuration() {
-        ensureInitialized();
+    public static LoggerConfiguration resetConfiguration() {
+        if (configuration != null) {
+            configuration.dispose();
+        }
+        configureDefaults();
         return configuration;
     }
 
-    static void ensureInitialized() {
-        if (!initialized) {
-            initialized = true;
-            configureDefaults();
+    private void dispose() {
+        for (Disposable dispose : disposeThingsOnReset) {
+            dispose.dispose();
         }
     }
 
@@ -41,7 +43,12 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
 
     private static void defaultConfiguration() {
         configuration = new LoggerConfiguration();
+        configuration.registerPattern("%newline", new ConstLoggerValueSupplier(System.getProperty("line.separator") != null ? System.getProperty("line.separator") : "\n"));
         configuration.registerPattern("%message", new MessageValueSupplier());
+        configuration.registerPattern("%thread", new ThreadValueSupplier());
+        configuration.registerPattern("%name", new LoggerNameValueSupplier());
+        configuration.registerPattern("%level", new LevelValueSupplier());
+        configuration.registerPattern("%date", new DateValueSupplier());
     }
 
     private static void defaultRootLoggerHandler() {
@@ -61,16 +68,20 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return rootLogger;
     }
 
-    public static void resetConfiguration() {
-        if (configuration != null) {
-            configuration.dispose();
-        }
-        configureDefaults();
+    public static FileLogHandlerConfiguration fileLogHandler(Context context) {
+        LogRecordFormatter formatter = configuration().compiler.compile("%date %level [%thread] %name - %message%newline");
+        return new FileLogHandler(context, formatter);
     }
 
-    private void dispose() {
-        for (Disposable dispose : disposeThingsOnReset) {
-            dispose.dispose();
+    public static LoggerConfiguration configuration() {
+        ensureInitialized();
+        return configuration;
+    }
+
+    static synchronized void ensureInitialized() {
+        if (!initialized) {
+            initialized = true;
+            configureDefaults();
         }
     }
 
@@ -83,8 +94,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         final ActivityStateListener stateListener = getStateListener(context);
         ArrayList<String> emails = new ArrayList<String>();
         emails.add(email);
-        NotifyDevOnErrorHandler onErrorHandler = new NotifyDevOnErrorHandler(context, emails, stateListener);
-        return onErrorHandler;
+        return new NotifyDevOnErrorHandler(context, emails, stateListener);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -104,6 +114,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
     }
 
     public void addHandlerToLogger(String loggerName, Handler handler) {
-        LogManager.getLogManager().getLogger(loggerName).addHandler(handler);
+        Logger logger = Logger.getLogger(loggerName);
+        logger.addHandler(handler);
     }
 }

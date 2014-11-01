@@ -2,9 +2,7 @@ package pl.brightinventions.slf4android.androidTest;
 
 import android.app.Application;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.AndroidTestCase;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +32,9 @@ public class NotifyDevOnErrorTests extends ActivityInstrumentationTestCase2<Test
         LOG.warn("Hello");
     }
 
-    @Test
     public void test_send_message_with_level_error() throws Exception {
         LOG.warn("Hello");
         LOG.error("Send email", new NullPointerException("A test message"));
-        Thread.sleep(10000);
+        Thread.sleep(1000);
     }
 }

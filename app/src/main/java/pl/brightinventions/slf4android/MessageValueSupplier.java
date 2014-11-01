@@ -5,7 +5,6 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.LogRecord;
 
 public class MessageValueSupplier implements LoggerPatternValueSupplier {
 

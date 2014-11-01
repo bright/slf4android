@@ -15,6 +15,15 @@ public enum LogLevel {
         this.utilLogLevel = utilLogLevel;
     }
 
+    public static LogLevel valueOf(Level utilLogLevel) {
+        for (LogLevel level : values()) {
+            if (level.utilLogLevel == utilLogLevel) {
+                return level;
+            }
+        }
+        return TRACE;
+    }
+
     public Level getUtilLogLevel() {
         return utilLogLevel;
     }

@@ -8,15 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogRecord;
 
 public class NotifyDevDialogDisplayActivity extends Activity {
-    private static final Logger LOG = LoggerFactory.getLogger(NotifyDevDialogDisplayActivity.class.getSimpleName());
     private static final MessageValueSupplier messageFormatter = new MessageValueSupplier();
     private AlertDialog dialog;
 

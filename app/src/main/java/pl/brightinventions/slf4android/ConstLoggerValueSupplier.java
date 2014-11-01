@@ -1,7 +1,5 @@
 package pl.brightinventions.slf4android;
 
-import java.util.logging.LogRecord;
-
 class ConstLoggerValueSupplier implements LoggerPatternValueSupplier {
     private final String value;
 

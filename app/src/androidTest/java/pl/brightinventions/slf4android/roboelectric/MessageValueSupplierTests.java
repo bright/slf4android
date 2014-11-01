@@ -2,14 +2,15 @@ package pl.brightinventions.slf4android.roboelectric;
 
 import org.junit.Test;
 
-import java.util.IllegalFormatException;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
+import pl.brightinventions.slf4android.LogRecord;
 import pl.brightinventions.slf4android.MessageValueSupplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class MessageValueSupplierTests extends RoboelectricTest {
     @Test

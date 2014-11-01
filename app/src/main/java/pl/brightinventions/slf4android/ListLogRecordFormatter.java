@@ -1,7 +1,6 @@
 package pl.brightinventions.slf4android;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.LogRecord;
 
 class ListLogRecordFormatter implements LogRecordFormatter {
     private ConcurrentLinkedQueue<LoggerPatternValueSupplier> valueSuppliers = new ConcurrentLinkedQueue<LoggerPatternValueSupplier>();

@@ -46,7 +46,7 @@ public class LogcatHandler extends Handler {
         String tag = record.getLoggerName();
 
         try {
-            String message = logRecordFormatter.format(record);
+            String message = logRecordFormatter.format(pl.brightinventions.slf4android.LogRecord.fromRecord(record));
             Log.println(level, tag, message);
         } catch (RuntimeException e) {
             Log.e("LogcatHandler", "Error logging message.", e);

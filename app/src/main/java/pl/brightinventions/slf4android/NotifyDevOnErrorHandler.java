@@ -16,19 +16,17 @@ public class NotifyDevOnErrorHandler extends Handler {
     private final AtLeastFilter filter;
     private final Context context;
     private final List<String> emailAddress;
-    private final int messageCount;
     private final WeakReference<ActivityStateListener> activityState;
     private AlertDialog dialog;
     private android.os.Handler mailLoopHandler = new android.os.Handler(Looper.getMainLooper());
 
     NotifyDevOnErrorHandler(Application context, Iterable<String> emailAddress, ActivityStateListener activityState) {
-        this(context, emailAddress, 10, LogLevel.ERROR, activityState);
+        this(context, emailAddress, LogLevel.ERROR, activityState);
     }
 
-    NotifyDevOnErrorHandler(Application context, Iterable<String> emailAddress, int messageCount, LogLevel minLevel, ActivityStateListener stateListener) {
+    NotifyDevOnErrorHandler(Application context, Iterable<String> emailAddress, LogLevel minLevel, ActivityStateListener stateListener) {
         this.context = context;
         this.emailAddress = Lists.newArrayList(emailAddress);
-        this.messageCount = messageCount;
         this.filter = new AtLeastFilter(minLevel);
         this.activityState = new WeakReference<ActivityStateListener>(stateListener);
     }
@@ -48,7 +46,7 @@ public class NotifyDevOnErrorHandler extends Handler {
     @Override
     public void publish(LogRecord record) {
         if (filter.isLoggable(record)) {
-            mailLoopHandler.post(new ShowDialogBecauseOfRecord(record));
+            mailLoopHandler.post(new ShowDialogBecauseOfRecord(pl.brightinventions.slf4android.LogRecord.fromRecord(record)));
         }
     }
 
@@ -65,9 +63,9 @@ public class NotifyDevOnErrorHandler extends Handler {
 
 
     private class ShowDialogBecauseOfRecord implements Runnable {
-        private final LogRecord record;
+        private final pl.brightinventions.slf4android.LogRecord record;
 
-        public ShowDialogBecauseOfRecord(LogRecord record) {
+        public ShowDialogBecauseOfRecord(pl.brightinventions.slf4android.LogRecord record) {
             this.record = record;
         }
 
