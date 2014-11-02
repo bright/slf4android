@@ -1,7 +1,7 @@
 slf4android
 ===========
 
-A simple implementation of [slf4j api](http://www.slf4j.org/) using android `java.util.logging.*`. This means you can easily hook in any existing `java.util.logging.Handler` implementations. 
+A simple implementation of [slf4j api](http://www.slf4j.org/) using android `java.util.logging.*`. This means you can **easily hook in any existing** `java.util.logging.Handler` implementations. 
 
 To use this little gem you'll need to add `http://bright.github.io/maven-repo/` to your repositories:
 ```groovy
@@ -33,7 +33,7 @@ class HomeActivity extends Activity {
 }
 ```
 ### Logging to a file
-To print messages to a seperate file just add:
+To print messages to a separate file just add:
 ```java
 LoggerConfiguration.configuration().addHandlerToLogger("", LoggerConfiguration.fileLogHandler(this));
 ```
