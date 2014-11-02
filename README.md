@@ -1,8 +1,9 @@
 slf4android
 ===========
 
-A simple implementation of [slf4j api](http://www.slf4j.org/) using android `java.util.logging.*`. To use this little gem you'll need to add `http://bright.github.io/maven-repo/` to your repositories:
+A simple implementation of [slf4j api](http://www.slf4j.org/) using android `java.util.logging.*`. This means you can easily hook in any existing `java.util.logging.Handler` implementations. 
 
+To use this little gem you'll need to add `http://bright.github.io/maven-repo/` to your repositories:
 ```groovy
 repositories {
     maven {
@@ -10,9 +11,7 @@ repositories {
     }
 }
 ```
-
 and then declare a dependency inside a module:
-
 ```groovy
 dependencies {
     compile('pl.brightinventions:slf4android:0.0.4@aar'){
@@ -21,7 +20,6 @@ dependencies {
     //other dependencies
 }
 ```
-
 As with any slf4j compatible implementation using slf4android looks like this:
 ```java
 class HomeActivity extends Activity {
@@ -34,4 +32,9 @@ class HomeActivity extends Activity {
     }
 }
 ```
-
+### Logging to a file
+To print messages to a seperate file just add:
+```java
+LoggerConfiguration.configuration().addHandlerToLogger("", LoggerConfiguration.fileLogHandler(this));
+```
+inside your custom `android.app.Application` `onCreate` method. This will create rotated log files inside `context.getApplicationInfo().dataDir` with a name derived from `context.getPackageName()` and a default message pattern `%date %level [%thread] %name - %message%newline`
