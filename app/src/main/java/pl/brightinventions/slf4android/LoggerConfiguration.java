@@ -90,11 +90,11 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return loggerPatterns;
     }
 
-    public NotifyDevOnErrorHandler notifyDeveloperWithLogcatDataHandler(final Application context, String email) {
+    public NotifyDeveloperHandler notifyDeveloperHandler(final Application context, String email) {
         final ActivityStateListener stateListener = getStateListener(context);
         ArrayList<String> emails = new ArrayList<String>();
         emails.add(email);
-        return new NotifyDevOnErrorHandler(context, emails, stateListener);
+        return new NotifyDeveloperHandler(context, emails, stateListener);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

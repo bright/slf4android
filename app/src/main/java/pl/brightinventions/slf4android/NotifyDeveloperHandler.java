@@ -9,26 +9,38 @@ import android.os.Looper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.logging.Filter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-public class NotifyDevOnErrorHandler extends Handler {
-    private final AtLeastFilter filter;
+public class NotifyDeveloperHandler extends Handler {
     private final Context context;
     private final List<String> emailAddress;
     private final WeakReference<ActivityStateListener> activityState;
+    private Filter filter;
     private AlertDialog dialog;
     private android.os.Handler mailLoopHandler = new android.os.Handler(Looper.getMainLooper());
 
-    NotifyDevOnErrorHandler(Application context, Iterable<String> emailAddress, ActivityStateListener activityState) {
+    NotifyDeveloperHandler(Application context, Iterable<String> emailAddress, ActivityStateListener activityState) {
         this(context, emailAddress, LogLevel.ERROR, activityState);
     }
 
-    NotifyDevOnErrorHandler(Application context, Iterable<String> emailAddress, LogLevel minLevel, ActivityStateListener stateListener) {
+    NotifyDeveloperHandler(Application context, Iterable<String> emailAddress, LogLevel minLevel, ActivityStateListener stateListener) {
         this.context = context;
         this.emailAddress = Lists.newArrayList(emailAddress);
         this.filter = new AtLeastFilter(minLevel);
         this.activityState = new WeakReference<ActivityStateListener>(stateListener);
+    }
+
+    public void setMinLogLevel(LogLevel logLevel) {
+        setFilter(new AtLeastFilter(logLevel));
+    }
+
+    public void setFilter(Filter filter) {
+        if (filter == null) {
+            throw new IllegalArgumentException("Filter must not be null");
+        }
+        this.filter = filter;
     }
 
     @Override
@@ -79,9 +91,9 @@ public class NotifyDevOnErrorHandler extends Handler {
 
             Context currentActivity = obtainActivityContext();
             if (currentActivity != null) {
-                dialog = NotifyDevDialogDisplayActivity.showDialogIn(currentActivity, record, emailAddress);
+                dialog = NotifyDeveloperDialogDisplayActivity.showDialogIn(currentActivity, record, emailAddress);
             } else {
-                Intent showDialogActivityIntent = NotifyDevDialogDisplayActivity.showIntent(context, record, emailAddress);
+                Intent showDialogActivityIntent = NotifyDeveloperDialogDisplayActivity.showIntent(context, record, emailAddress);
                 context.startActivity(showDialogActivityIntent);
             }
         }

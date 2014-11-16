@@ -11,12 +11,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotifyDevDialogDisplayActivity extends Activity {
+public class NotifyDeveloperDialogDisplayActivity extends Activity {
     private static final MessageValueSupplier messageFormatter = new MessageValueSupplier();
     private AlertDialog dialog;
 
     public static Intent showIntent(Context context, LogRecord record, List<String> emailAddresses) {
-        Intent intent = new Intent(context, NotifyDevDialogDisplayActivity.class);
+        Intent intent = new Intent(context, NotifyDeveloperDialogDisplayActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("log_record", getMessage(record));
         intent.putExtra("email_addresses", new ArrayList<String>(emailAddresses));

@@ -37,7 +37,7 @@ class EmailErrorReport {
     }
 
     public void configureSubject(Intent sendEmail, Context subject) {
-        sendEmail.putExtra(Intent.EXTRA_SUBJECT, "Error in : " + subject.getPackageName());
+        sendEmail.putExtra(Intent.EXTRA_SUBJECT, "Error in: " + subject.getPackageName());
     }
 
     public void configureMessage(Intent sendEmail) {
@@ -50,20 +50,20 @@ class EmailErrorReport {
         }
     }
 
-    private void configureAttachment(Intent sendEmail, AsyncTask<?, ?, File> readLogcatEntries) {
+    private void configureAttachment(Intent sendEmail, AsyncTask<?, ?, File> attachmentTask) {
         try {
-            File file = readLogcatEntries.get(5, TimeUnit.SECONDS);
+            File file = attachmentTask.get(5, TimeUnit.SECONDS);
             if (file != null) {
                 sendEmail.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             } else {
                 LOG.warn("Reading logcat entries returned null");
             }
         } catch (InterruptedException e) {
-            LOG.warn("Timed out while waiting for logcat entries", e);
+            LOG.warn("Interrupted while waiting for attachment", e);
         } catch (ExecutionException e) {
-            LOG.warn("Error while waiting for logcat entries", e);
+            LOG.warn("Error while waiting for attachment", e);
         } catch (TimeoutException e) {
-            LOG.warn("Timed out while waiting for logcat entries", e);
+            LOG.warn("Timed out while waiting for attachment", e);
         }
     }
 }

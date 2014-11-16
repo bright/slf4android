@@ -7,13 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.brightinventions.slf4android.LoggerConfiguration;
-import pl.brightinventions.slf4android.NotifyDevOnErrorHandler;
+import pl.brightinventions.slf4android.NotifyDeveloperHandler;
 
-public class NotifyDevOnErrorTests extends ActivityInstrumentationTestCase2<TestActivity> {
+public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase2<TestActivity> {
 
     private Logger LOG;
 
-    public NotifyDevOnErrorTests() {
+    public NotifyDeveloperHandlerTests() {
         super(TestActivity.class);
     }
 
@@ -22,7 +22,7 @@ public class NotifyDevOnErrorTests extends ActivityInstrumentationTestCase2<Test
         LoggerConfiguration.resetConfiguration();
         LoggerConfiguration configuration = LoggerConfiguration.configuration();
         Application targetContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
-        NotifyDevOnErrorHandler handler = configuration.notifyDeveloperWithLogcatDataHandler(targetContext, "piotr.mionskowski@gmail.com");
+        NotifyDeveloperHandler handler = configuration.notifyDeveloperHandler(targetContext, "piotr.mionskowski@gmail.com");
         configuration.addHandlerToLogger("", handler);
         LOG = LoggerFactory.getLogger(getClass().getSimpleName());
         super.setUp();

@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:allowBackup="true">
-    <meta-data
+        <meta-data
             android:name="ignore"
             android:value="ignore"/>
         <activity
-            android:name=".NotifyDevDialogDisplayActivity"
+            android:name=".NotifyDeveloperDialogDisplayActivity"
             android:theme="@android:style/Theme.NoDisplay"/>
     </application>
 </manifest>
