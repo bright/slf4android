@@ -7,9 +7,7 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 class AndroidLoggerAdapter implements Logger {
     private static final Level TRACE_LEVEL = LogLevel.TRACE.getUtilLogLevel();
@@ -58,6 +56,10 @@ class AndroidLoggerAdapter implements Logger {
     @Override
     public void trace(String format, Object... arguments) {
         print(TRACE_LEVEL, format, arguments);
+    }
+
+    private void print(Level level, String format, Object[] args) {
+        logger.log(level, format, args);
     }
 
     @Override

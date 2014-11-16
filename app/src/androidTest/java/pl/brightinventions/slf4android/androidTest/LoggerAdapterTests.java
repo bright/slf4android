@@ -67,6 +67,11 @@ public class LoggerAdapterTests extends AndroidTestCase {
         return result;
     }
 
+    public void test_debug_message_multi_arg() throws Exception {
+        getLogger().debug("Message {} {} {} {}", 1, 2, 3, 4);
+        assertThat(getLastMessage(), containsString("Message 1 2 3 4"));
+    }
+
     public void test_info_message() throws Exception {
         getLogger().info("With string '{}'", "string arg");
         assertThat(getLastMessage(), containsString("With string 'string arg'"));
