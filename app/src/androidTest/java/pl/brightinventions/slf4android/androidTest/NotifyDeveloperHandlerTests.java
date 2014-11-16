@@ -35,6 +35,6 @@ public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase
     public void test_send_message_with_level_error() throws Exception {
         LOG.warn("Hello");
         LOG.error("Send email", new NullPointerException("A test message"));
-        Thread.sleep(1000);
+        Thread.sleep(5000);
     }
 }

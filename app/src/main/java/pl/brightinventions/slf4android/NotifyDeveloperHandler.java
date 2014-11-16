@@ -5,9 +5,12 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Looper;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
@@ -20,6 +23,7 @@ public class NotifyDeveloperHandler extends Handler {
     private Filter filter;
     private AlertDialog dialog;
     private android.os.Handler mailLoopHandler = new android.os.Handler(Looper.getMainLooper());
+    private ArrayList<String> attachmentClassList;
 
     NotifyDeveloperHandler(Application context, Iterable<String> emailAddress, ActivityStateListener activityState) {
         this(context, emailAddress, LogLevel.ERROR, activityState);
@@ -30,6 +34,7 @@ public class NotifyDeveloperHandler extends Handler {
         this.emailAddress = Lists.newArrayList(emailAddress);
         this.filter = new AtLeastFilter(minLevel);
         this.activityState = new WeakReference<ActivityStateListener>(stateListener);
+        this.attachmentClassList = new ArrayList<String>();
     }
 
     public void setMinLogLevel(LogLevel logLevel) {
@@ -73,6 +78,23 @@ public class NotifyDeveloperHandler extends Handler {
         }
     }
 
+    public void addAttachmentClass(Class<? extends AsyncTask<Context, Void, File>> attachmentClass) {
+        if (attachmentClass == null) {
+            throw new IllegalArgumentException("attachmentClass must not be null");
+        }
+        try {
+            attachmentClass.newInstance();
+        } catch (InstantiationException e) {
+            throw new IllegalArgumentException("Can't create attachment factory from class " + attachmentClass, e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Can't create attachment factory from class " + attachmentClass, e);
+        }
+        attachmentClassList.add(attachmentClass.getName());
+    }
+
+    private ArrayList<String> getAttachmentClassList() {
+        return attachmentClassList;
+    }
 
     private class ShowDialogBecauseOfRecord implements Runnable {
         private final pl.brightinventions.slf4android.LogRecord record;
@@ -91,9 +113,14 @@ public class NotifyDeveloperHandler extends Handler {
 
             Context currentActivity = obtainActivityContext();
             if (currentActivity != null) {
-                dialog = NotifyDeveloperDialogDisplayActivity.showDialogIn(currentActivity, record, emailAddress);
+                dialog = NotifyDeveloperDialogDisplayActivity.showDialogIn(currentActivity,
+                        record,
+                        emailAddress, getAttachmentClassList());
             } else {
-                Intent showDialogActivityIntent = NotifyDeveloperDialogDisplayActivity.showIntent(context, record, emailAddress);
+                Intent showDialogActivityIntent = NotifyDeveloperDialogDisplayActivity.showIntent(context,
+                        record,
+                        emailAddress,
+                        getAttachmentClassList());
                 context.startActivity(showDialogActivityIntent);
             }
         }

@@ -104,7 +104,9 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         final ActivityStateListener stateListener = getStateListener(context);
         ArrayList<String> emails = new ArrayList<String>();
         emails.add(email);
-        return new NotifyDeveloperHandler(context, emails, stateListener);
+        NotifyDeveloperHandler handler = new NotifyDeveloperHandler(context, emails, stateListener);
+        handler.addAttachmentClass(ReadLogcatEntriesAsyncTask.class);
+        return handler;
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
