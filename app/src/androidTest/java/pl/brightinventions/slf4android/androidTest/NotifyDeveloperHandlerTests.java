@@ -19,7 +19,7 @@ public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase
 
     @Override
     protected void setUp() throws Exception {
-        LoggerConfiguration.resetConfiguration();
+        LoggerConfiguration.resetConfigurationToDefault();
         LoggerConfiguration configuration = LoggerConfiguration.configuration();
         Application targetContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
         NotifyDeveloperHandler handler = configuration.notifyDeveloperHandler(targetContext, "piotr.mionskowski@gmail.com");

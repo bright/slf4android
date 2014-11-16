@@ -26,7 +26,7 @@ public class FileHandlerTests extends AndroidTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        LoggerConfiguration.resetConfiguration();
+        LoggerConfiguration.resetConfigurationToDefault();
         handler = LoggerConfiguration.fileLogHandler(getContext());
         LoggerConfiguration.configuration().addHandlerToLogger(getClass().getSimpleName(), handler);
         LOG = LoggerFactory.getLogger(getClass().getSimpleName());

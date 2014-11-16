@@ -22,7 +22,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         compiler = new HandlerFormatterCompiler(this);
     }
 
-    public static LoggerConfiguration resetConfiguration() {
+    public static LoggerConfiguration resetConfigurationToDefault() {
         if (configuration != null) {
             configuration.dispose();
         }
@@ -38,7 +38,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
 
     private static void configureDefaults() {
         defaultConfiguration();
-        defaultRootLoggerHandler();
+        setupDefaultRootLoggerHandler();
     }
 
     private static void defaultConfiguration() {
@@ -51,7 +51,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         configuration.registerPattern("%date", new DateValueSupplier());
     }
 
-    private static void defaultRootLoggerHandler() {
+    private static void setupDefaultRootLoggerHandler() {
         Logger rootLogger = removeRootLogHandlers();
         rootLogger.addHandler(new LogcatHandler(configuration.compiler.compile("%message")));
     }
@@ -88,6 +88,16 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
     @Override
     public Iterable<LoggerPattern> getPatterns() {
         return loggerPatterns;
+    }
+
+    public LoggerConfiguration removeRootLogcatHandler() {
+        Logger rootLogger = LogManager.getLogManager().getLogger("");
+        for (Handler handler : Arrays.asList(rootLogger.getHandlers())) {
+            if (handler instanceof LogcatHandler) {
+                rootLogger.removeHandler(handler);
+            }
+        }
+        return this;
     }
 
     public NotifyDeveloperHandler notifyDeveloperHandler(final Application context, String email) {
