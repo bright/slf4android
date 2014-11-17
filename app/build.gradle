@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-version = "0.0.4"
+version = "0.0.5"
 
 
 android {
@@ -59,7 +59,7 @@ publishing {
             groupId 'pl.brightinventions'
             artifactId 'slf4android'
             version version
-            artifact "${project.buildDir}/outputs/aar/${project.name}-${project.version}.aar"
+            artifact "${project.buildDir}/outputs/aar/app-release.aar"
 
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
