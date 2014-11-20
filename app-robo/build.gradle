@@ -14,4 +14,4 @@ dependencies {
     compile files(androidModule.plugins.findPlugin("com.android.library").getBootClasspath())
 }
 
-assemble.dependsOn(':app:testClasses')
+assemble.dependsOn(':app:compileDebugTestSources')

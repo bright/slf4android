@@ -61,17 +61,28 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
     }
 
     private static Logger removeRootLogHandlers() {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
+        return removeLogHandlers("");
+    }
+
+    private static Logger removeLogHandlers(String loggerName) {
+        Logger rootLogger = LogManager.getLogManager().getLogger(loggerName);
         for (Handler handler : Arrays.asList(rootLogger.getHandlers())) {
             rootLogger.removeHandler(handler);
         }
         return rootLogger;
     }
 
+    /**
+     * Creates a {@link pl.brightinventions.slf4android.FileLogHandlerConfiguration} logger handler.
+     * The returned new instance should be added to some logger with {@link #addHandlerToLogger(String, java.util.logging.Handler)}
+     *
+     * @return A new instance of {@link pl.brightinventions.slf4android.FileLogHandlerConfiguration}.
+     */
     public static FileLogHandlerConfiguration fileLogHandler(Context context) {
         LogRecordFormatter formatter = configuration().compiler.compile("%date %level [%thread] %name - %message%newline");
         return new FileLogHandler(context, formatter);
     }
+
 
     public static LoggerConfiguration configuration() {
         ensureInitialized();
@@ -90,10 +101,24 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return loggerPatterns;
     }
 
+    /**
+     * Removes default {@link pl.brightinventions.slf4android.LogcatHandler} from root logger.
+     */
     public LoggerConfiguration removeRootLogcatHandler() {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
+        return removeRootLogHandler(LogcatHandler.class);
+    }
+
+    private LoggerConfiguration removeRootLogHandler(Class<LogcatHandler> handlerToRemoveClass) {
+        return removeHandlerFromLogger("", handlerToRemoveClass);
+    }
+
+    /**
+     * Removes all handlers that derive from {@code handlerToRemoveClass} from logger named {@code logger}.
+     */
+    public LoggerConfiguration removeHandlerFromLogger(String loggerName, Class<? extends Handler> handlerToRemoveClass) {
+        Logger rootLogger = LogManager.getLogManager().getLogger(loggerName);
         for (Handler handler : Arrays.asList(rootLogger.getHandlers())) {
-            if (handler instanceof LogcatHandler) {
+            if (handlerToRemoveClass.isAssignableFrom(handler.getClass())) {
                 rootLogger.removeHandler(handler);
             }
         }
@@ -125,8 +150,25 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return null;
     }
 
-    public void addHandlerToLogger(String loggerName, Handler handler) {
+    /**
+     * Adds given {@code handler} to logger named {@code loggerName}.
+     *
+     * @return A {@link java.util.logging.Logger} named {@code loggerName}.
+     */
+    public Logger addHandlerToLogger(String loggerName, Handler handler) {
         Logger logger = Logger.getLogger(loggerName);
         logger.addHandler(handler);
+        return logger;
+    }
+
+    /**
+     * Adds given {@code handler} to root logger.
+     *
+     * @return The root {@link java.util.logging.Logger}.
+     */
+    public Logger addHandlerToRootLogger(Handler handler) {
+        Logger logger = Logger.getLogger("");
+        logger.addHandler(handler);
+        return logger;
     }
 }

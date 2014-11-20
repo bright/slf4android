@@ -5,7 +5,7 @@ version = "0.0.5"
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.0"
+    buildToolsVersion "21.1.1"
 
     defaultConfig {
         applicationId "pl.brightinventions.slf4android"
@@ -13,12 +13,6 @@ android {
         targetSdkVersion 21
         versionCode 4
         versionName version
-    }
-    buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     packagingOptions {

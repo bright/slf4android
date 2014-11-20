@@ -20,7 +20,6 @@ package pl.brightinventions.slf4android;
 import android.util.Log;
 
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 
@@ -42,33 +41,17 @@ public class LogcatHandler extends Handler {
 
     @Override
     public void publish(LogRecord record) {
-        int level = getAndroidLevel(record.getLevel());
+        pl.brightinventions.slf4android.LogRecord slfRecord = pl.brightinventions.slf4android.LogRecord.fromRecord(record);
+        int level = slfRecord.getLogLevel().getAndroidLevel();
         String tag = record.getLoggerName();
 
         try {
-            String message = logRecordFormatter.format(pl.brightinventions.slf4android.LogRecord.fromRecord(record));
+            String message = logRecordFormatter.format(slfRecord);
             Log.println(level, tag, message);
         } catch (RuntimeException e) {
             Log.e("LogcatHandler", "Error logging message.", e);
         }
     }
 
-    /**
-     * Converts a {@link java.util.logging.Logger} logging level into an Android one.
-     *
-     * @param level The {@link java.util.logging.Logger} logging level.
-     * @return The resulting Android logging level.
-     */
-    static int getAndroidLevel(Level level) {
-        int value = level.intValue();
-        if (value >= 1000) { // SEVERE
-            return Log.ERROR;
-        } else if (value >= 900) { // WARNING
-            return Log.WARN;
-        } else if (value >= 800) { // INFO
-            return Log.INFO;
-        } else {
-            return Log.DEBUG;
-        }
-    }
+
 }
