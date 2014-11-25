@@ -45,18 +45,23 @@ class EmailErrorReport {
     }
 
     public void configureAttachments(Intent sendEmail) {
+        ArrayList<Uri> attachmentsUris = new ArrayList<Uri>();
         for (AsyncTask<?, ?, File> fileAttachmentSource : attachments) {
-            configureAttachment(sendEmail, fileAttachmentSource);
+            Uri uri = buildAttachmentUri(fileAttachmentSource);
+            if (uri != null) {
+                attachmentsUris.add(uri);
+            }
         }
+        sendEmail.putParcelableArrayListExtra(Intent.EXTRA_STREAM, attachmentsUris);
     }
 
-    private void configureAttachment(Intent sendEmail, AsyncTask<?, ?, File> attachmentTask) {
+    private Uri buildAttachmentUri(AsyncTask<?, ?, File> attachmentTask) {
         try {
             File file = attachmentTask.get(5, TimeUnit.SECONDS);
             if (file != null) {
-                sendEmail.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                return Uri.fromFile(file);
             } else {
-                LOG.warn("Reading logcat entries returned null");
+                LOG.warn("Attachment task {} returned null", attachmentTask.getClass().getSimpleName());
             }
         } catch (InterruptedException e) {
             LOG.warn("Interrupted while waiting for attachment", e);
@@ -65,5 +70,6 @@ class EmailErrorReport {
         } catch (TimeoutException e) {
             LOG.warn("Timed out while waiting for attachment", e);
         }
+        return null;
     }
 }

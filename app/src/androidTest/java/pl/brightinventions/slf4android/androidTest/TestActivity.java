@@ -1,13 +1,12 @@
 package pl.brightinventions.slf4android.androidTest;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 public class TestActivity extends Activity {
-    static Runnable action;
-
     @Override
-    protected void onResume() {
-        action.run();
-        super.onResume();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(pl.brightinventions.slf4android.test.R.layout.test);
     }
 }

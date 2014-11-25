@@ -5,8 +5,12 @@ import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Looper;
+import android.util.Log;
+
+import com.squareup.seismic.ShakeDetector;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -14,12 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Filter;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 public class NotifyDeveloperHandler extends Handler {
+    private static final String TAG = NotifyDeveloperHandler.class.getSimpleName();
     private final Context context;
     private final List<String> emailAddress;
     private final WeakReference<ActivityStateListener> activityState;
+    private final ShakeDetector shakeDetector;
     private Filter filter;
     private AlertDialog dialog;
     private android.os.Handler mailLoopHandler = new android.os.Handler(Looper.getMainLooper());
@@ -35,6 +42,16 @@ public class NotifyDeveloperHandler extends Handler {
         this.filter = new AtLeastFilter(minLevel);
         this.activityState = new WeakReference<ActivityStateListener>(stateListener);
         this.attachmentClassList = new ArrayList<String>();
+        this.shakeDetector = new ShakeDetector(new ShakeDetector.Listener() {
+            @Override
+            public void hearShake() {
+                beginPublishOnMainThread(new LogRecord(Level.INFO, "Report a problem with app"));
+            }
+        });
+    }
+
+    private void beginPublishOnMainThread(LogRecord record) {
+        mailLoopHandler.post(new ShowDialogBecauseOfRecord(pl.brightinventions.slf4android.LogRecord.fromRecord(record)));
     }
 
     public void setMinLogLevel(LogLevel logLevel) {
@@ -54,6 +71,7 @@ public class NotifyDeveloperHandler extends Handler {
         if (dialog != null) {
             dialog.dismiss();
         }
+        shakeDetector.stop();
     }
 
     @Override
@@ -63,7 +81,7 @@ public class NotifyDeveloperHandler extends Handler {
     @Override
     public void publish(LogRecord record) {
         if (filter.isLoggable(record)) {
-            mailLoopHandler.post(new ShowDialogBecauseOfRecord(pl.brightinventions.slf4android.LogRecord.fromRecord(record)));
+            beginPublishOnMainThread(record);
         }
     }
 
@@ -90,6 +108,17 @@ public class NotifyDeveloperHandler extends Handler {
             throw new IllegalArgumentException("Can't create attachment factory from class " + attachmentClass, e);
         }
         attachmentClassList.add(attachmentClass.getName());
+    }
+
+    public void notifyWhenDeviceIsShaken() {
+        SensorManager manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        if (manager == null) {
+            Log.w(TAG, "Sensor manager is null will not install shake reporter");
+        } else {
+            if (!shakeDetector.start(manager)) {
+                Log.w(TAG, "Failed to start shake detector");
+            }
+        }
     }
 
     private ArrayList<String> getAttachmentClassList() {

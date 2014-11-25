@@ -6,6 +6,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 import pl.brightinventions.slf4android.LoggerConfiguration;
 import pl.brightinventions.slf4android.NotifyDeveloperHandler;
 
@@ -29,12 +31,14 @@ public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase
     }
 
     public void test_dont_send_message_with_level_lower_than_error() throws Exception {
+        getActivity();
         LOG.warn("Hello");
     }
 
     public void test_send_message_with_level_error() throws Exception {
+        getActivity();
         LOG.warn("Hello");
         LOG.error("Send email", new NullPointerException("A test message"));
-        Thread.sleep(5000);
+        Thread.sleep(TimeUnit.SECONDS.toMillis(15));
     }
 }

@@ -131,6 +131,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         emails.add(email);
         NotifyDeveloperHandler handler = new NotifyDeveloperHandler(context, emails, stateListener);
         handler.addAttachmentClass(ReadLogcatEntriesAsyncTask.class);
+        handler.addAttachmentClass(MakeScreenShotAsyncTask.class);
         return handler;
     }
 

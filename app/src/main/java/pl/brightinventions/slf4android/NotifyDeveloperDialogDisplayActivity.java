@@ -100,7 +100,7 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
     }
 
     private static void sendEmailWithError(Context activityContext, EmailErrorReport emailErrorReport) {
-        Intent sendEmail = new Intent(Intent.ACTION_SEND);
+        Intent sendEmail = new Intent(Intent.ACTION_SEND_MULTIPLE);
         sendEmail.setType("message/rfc822");
 
         emailErrorReport.configureRecipients(sendEmail);
