@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-version = "0.0.7"
+version = "0.0.8"
 
 
 android {
@@ -11,7 +11,7 @@ android {
         applicationId "pl.brightinventions.slf4android"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 6
+        versionCode 8
         versionName version
     }
 
