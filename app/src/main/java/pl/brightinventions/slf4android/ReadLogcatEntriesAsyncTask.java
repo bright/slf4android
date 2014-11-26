@@ -24,7 +24,7 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
 
             String fullPath = tempFile.getAbsolutePath();
 
-            String command = String.format("logcat -d -f %s", fullPath);
+            String command = String.format("logcat -v time -d -f %s", fullPath);
 
             Runtime runtime = Runtime.getRuntime();
             if (runtime != null) {
