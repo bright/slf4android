@@ -36,7 +36,7 @@ public class NotifyDeveloperHandler extends Handler {
         this(context, emailAddress, LogLevel.ERROR, activityState);
     }
 
-    NotifyDeveloperHandler(Application context, Iterable<String> emailAddress, LogLevel minLevel, ActivityStateListener stateListener) {
+    NotifyDeveloperHandler(Application context, Iterable<String> emailAddress, LogLevel minLevel, final ActivityStateListener stateListener) {
         this.context = context;
         this.emailAddress = Lists.newArrayList(emailAddress);
         this.filter = new AtLeastFilter(minLevel);
@@ -45,7 +45,16 @@ public class NotifyDeveloperHandler extends Handler {
         this.shakeDetector = new ShakeDetector(new ShakeDetector.Listener() {
             @Override
             public void hearShake() {
-                beginPublishOnMainThread(new LogRecord(Level.INFO, "Report a problem with app"));
+                ActivityStateListener listener = activityState.get();
+                if (listener != null) {
+                    if (listener.isAppInForeground()) {
+                        beginPublishOnMainThread(new LogRecord(Level.INFO, "Report a problem with app"));
+                    } else {
+                        Log.i(TAG, "Ignore shake event - the app appears to be in background");
+                    }
+                } else {
+                    Log.i(TAG, "Ignore shake event - can't detect if app is in foreground (API < 14)");
+                }
             }
         });
     }
@@ -111,14 +120,19 @@ public class NotifyDeveloperHandler extends Handler {
     }
 
     public void notifyWhenDeviceIsShaken() {
-        SensorManager manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        if (manager == null) {
-            Log.w(TAG, "Sensor manager is null will not install shake reporter");
-        } else {
-            if (!shakeDetector.start(manager)) {
-                Log.w(TAG, "Failed to start shake detector");
+        if (activityState.get() != null) {
+            SensorManager manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+            if (manager == null) {
+                Log.w(TAG, "Sensor manager is null will not install shake reporter");
+            } else {
+                if (!shakeDetector.start(manager)) {
+                    Log.w(TAG, "Failed to start shake detector");
+                }
             }
+        } else {
+            Log.w(TAG, "Will not notify on shake - can't detect if app is in foreground (API < 14)");
         }
+
     }
 
     private ArrayList<String> getAttachmentClassList() {
