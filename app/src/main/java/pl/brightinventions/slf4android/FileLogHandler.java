@@ -68,6 +68,19 @@ class FileLogHandler extends FileLogHandlerConfiguration {
     }
 
     @Override
+    public FileLogHandlerConfiguration setFullFilePathPattern(String fullPathPattern) {
+        ensureNotInitialized();
+        config.fileName = fullPathPattern;
+        return this;
+    }
+
+    private void ensureNotInitialized() {
+        if (fileHandler != null) {
+            throw new IllegalStateException("You can only change configuration before file handler is added to logger");
+        }
+    }
+
+    @Override
     public String getCurrentFileName() {
         ensureInitialized();
         return fileHandlerExpose.getCurrentFileName(fileHandler);
