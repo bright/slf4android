@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -45,7 +46,11 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
     private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, Iterable<AsyncTask<Context, Void, File>> attachmentTasks, final Disposable onDialogClose) {
         final EmailErrorReport emailErrorReport = new EmailErrorReport(message, emailAddresses);
         for (AsyncTask<Context, Void, File> attachment : attachmentTasks) {
-            attachment.execute(activityContext);
+            if (Build.VERSION.SDK_INT < 11) {
+                attachment.execute(activityContext);
+            } else {
+                attachment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, activityContext);
+            }
             emailErrorReport.addFileAttachmentFrom(attachment);
         }
         String shortMessage = message;
