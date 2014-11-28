@@ -1,5 +1,6 @@
 package pl.brightinventions.slf4android;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -46,11 +47,7 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
     private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, Iterable<AsyncTask<Context, Void, File>> attachmentTasks, final Disposable onDialogClose) {
         final EmailErrorReport emailErrorReport = new EmailErrorReport(message, emailAddresses);
         for (AsyncTask<Context, Void, File> attachment : attachmentTasks) {
-            if (Build.VERSION.SDK_INT < 11) {
-                attachment.execute(activityContext);
-            } else {
-                attachment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, activityContext);
-            }
+            startTaskExecution(activityContext, attachment);
             emailErrorReport.addFileAttachmentFrom(attachment);
         }
         String shortMessage = message;
@@ -102,6 +99,15 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
             }
         }
         return attachmentTasks;
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private static void startTaskExecution(Context activityContext, AsyncTask<Context, Void, File> attachment) {
+        if (Build.VERSION.SDK_INT < 11) {
+            attachment.execute(activityContext);
+        } else {
+            attachment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, activityContext);
+        }
     }
 
     private static void sendEmailWithError(Context activityContext, EmailErrorReport emailErrorReport) {
