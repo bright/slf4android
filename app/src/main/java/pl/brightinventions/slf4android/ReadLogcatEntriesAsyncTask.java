@@ -24,17 +24,18 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
 
             String fullPath = tempFile.getAbsolutePath();
 
-            String command = String.format("logcat -v time -d -f %s", fullPath);
+            String readLogcatCommand = String.format("logcat -v time -d -f %s", fullPath);
 
             Runtime runtime = Runtime.getRuntime();
             if (runtime != null) {
                 try {
-                    Process process = runtime.exec(command);
+                    Process process = runtime.exec(readLogcatCommand);
                     int exitCode = process.waitFor();
                     if (exitCode != 0) {
-                        LOG.warn("Command {} returned with code {}", command, exitCode);
+                        LOG.warn("Command {} returned with code {}", readLogcatCommand, exitCode);
                     } else {
-                        LOG.info("Dumped logcat entries to {} with size {} KB", fullPath, tempFile.length() / 1024);
+                        LOG.info("Dumped logcat entries to {} with size {} KB - will now clear it", fullPath, tempFile.length() / 1024);
+                        runtime.exec("logcat -c");
                     }
                 } catch (IOException e) {
                     LOG.warn("Error dumping logcat entries to {}", fullPath, e);
