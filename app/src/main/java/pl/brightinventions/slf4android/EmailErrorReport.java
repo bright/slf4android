@@ -36,12 +36,12 @@ class EmailErrorReport {
         sendEmail.putExtra(Intent.EXTRA_EMAIL, emails);
     }
 
-    public void configureSubject(Intent sendEmail, Context subject) {
-        sendEmail.putExtra(Intent.EXTRA_SUBJECT, "Error in: " + subject.getPackageName());
+    public void configureSubject(Intent sendEmail, String emailSubject) {
+        sendEmail.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
     }
 
-    public void configureMessage(Intent sendEmail) {
-        sendEmail.putExtra(Intent.EXTRA_TEXT, "Please provide a description of an error:\n" + message);
+    public void configureMessage(Intent sendEmail, String emailBody) {
+        sendEmail.putExtra(Intent.EXTRA_TEXT, emailBody + message);
     }
 
     public void configureAttachments(Intent sendEmail) {
