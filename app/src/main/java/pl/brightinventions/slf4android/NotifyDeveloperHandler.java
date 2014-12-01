@@ -187,11 +187,13 @@ public class NotifyDeveloperHandler extends Handler {
         }
     }
 
-    public void withSubject(String subject){
+    public NotifyDeveloperHandler withSubject(String subject){
         this.emailSubject = subject;
+        return this;
     }
 
-    public void withBody(String body){
+    public NotifyDeveloperHandler withBody(String body){
         this.emailBody = body;
+        return this;
     }
 }

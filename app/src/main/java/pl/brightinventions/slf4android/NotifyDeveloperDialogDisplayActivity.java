@@ -19,8 +19,6 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
     private static final String TAG = NotifyDeveloperDialogDisplayActivity.class.getSimpleName();
     private static final MessageValueSupplier messageFormatter = new MessageValueSupplier();
     private AlertDialog dialog;
-    private static String emailSubject;
-    private static String emailBody;
 
     public static Intent showIntent(Context context, LogRecord record, List<String> emailAddresses, String emailSubject, String emailBody, Iterable<String> attachmentsClasses) {
         Intent intent = new Intent(context, NotifyDeveloperDialogDisplayActivity.class);
@@ -32,8 +30,8 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
             attachmentClassNames.add(reporterClass);
         }
         intent.putExtra("attachments", attachmentClassNames);
-        NotifyDeveloperDialogDisplayActivity.emailSubject = emailSubject;
-        NotifyDeveloperDialogDisplayActivity.emailBody = emailSubject;
+        intent.putExtra("email_subject", emailSubject);
+        intent.putExtra("email_body", emailBody);
         return intent;
     }
 
@@ -44,14 +42,12 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
     }
 
     public static AlertDialog showDialogIn(final Context activityContext, LogRecord record, final List<String> emailAddresses, String emailSubject, String emailBody, Iterable<String> attachmentTasks) {
-        NotifyDeveloperDialogDisplayActivity.emailSubject = emailSubject;
-        NotifyDeveloperDialogDisplayActivity.emailBody = emailSubject;
-        final AlertDialog alertDialog = showDialogIn(activityContext, getMessage(record), emailAddresses, buildAttachmentFactories(attachmentTasks), null);
+        final AlertDialog alertDialog = showDialogIn(activityContext, getMessage(record), emailAddresses, emailSubject, emailBody, buildAttachmentFactories(attachmentTasks), null);
         return alertDialog;
     }
 
-    private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, Iterable<AsyncTask<Context, Void, File>> attachmentTasks, final Disposable onDialogClose) {
-        final EmailErrorReport emailErrorReport = new EmailErrorReport(message, emailAddresses);
+    private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, String emailSubject, String emailBody, Iterable<AsyncTask<Context, Void, File>> attachmentTasks, final Disposable onDialogClose) {
+        final EmailErrorReport emailErrorReport = new EmailErrorReport(message, emailAddresses, emailSubject, emailBody);
         for (AsyncTask<Context, Void, File> attachment : attachmentTasks) {
             if (Build.VERSION.SDK_INT < 11) {
                 attachment.execute(activityContext);
@@ -116,8 +112,8 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
         sendEmail.setType("message/rfc822");
 
         emailErrorReport.configureRecipients(sendEmail);
-        emailErrorReport.configureSubject(sendEmail, emailSubject);
-        emailErrorReport.configureMessage(sendEmail, emailBody);
+        emailErrorReport.configureSubject(sendEmail);
+        emailErrorReport.configureMessage(sendEmail);
         emailErrorReport.configureAttachments(sendEmail);
 
         try {
@@ -144,9 +140,11 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
         super.onCreate(savedInstanceState);
         String log_record = (String) getIntent().getSerializableExtra("log_record");
         List<String> emailAddresses = (List<String>) getIntent().getSerializableExtra("email_addresses");
+        String emailSubject = getIntent().getExtras().getString("email_subject");
+        String emailBody = getIntent().getExtras().getString("email_body");
         List<AsyncTask<Context, Void, File>> attachmentTasks = buildAttachmentFactoriesFromIntent();
         if (log_record != null) {
-            dialog = showDialogIn(this, log_record, emailAddresses, attachmentTasks, new Disposable() {
+            dialog = showDialogIn(this, log_record, emailAddresses, emailSubject, emailBody, attachmentTasks, new Disposable() {
                 @Override
                 public void dispose() {
                     finish();

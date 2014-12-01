@@ -14,6 +14,7 @@ import pl.brightinventions.slf4android.NotifyDeveloperHandler;
 public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase2<TestActivity> {
 
     private Logger LOG;
+    private NotifyDeveloperHandler handler;
 
     public NotifyDeveloperHandlerTests() {
         super(TestActivity.class);
@@ -24,7 +25,7 @@ public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase
         LoggerConfiguration.resetConfigurationToDefault();
         LoggerConfiguration configuration = LoggerConfiguration.configuration();
         Application targetContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
-        NotifyDeveloperHandler handler = configuration.notifyDeveloperHandler(targetContext, "piotr.mionskowski@gmail.com");
+        handler = configuration.notifyDeveloperHandler(targetContext, "piotr.mionskowski@gmail.com");
         configuration.addHandlerToLogger("", handler);
         LOG = LoggerFactory.getLogger(getClass().getSimpleName());
         super.setUp();
@@ -36,6 +37,14 @@ public class NotifyDeveloperHandlerTests extends ActivityInstrumentationTestCase
     }
 
     public void test_send_message_with_level_error() throws Exception {
+        getActivity();
+        LOG.warn("Hello");
+        LOG.error("Send email", new NullPointerException("A test message"));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(15));
+    }
+
+    public void test_send_message_with_custom_subject_body_with_level_error() throws Exception{
+        handler.withSubject("Błąd").withBody("Podaj szczegóły błędu: ");
         getActivity();
         LOG.warn("Hello");
         LOG.error("Send email", new NullPointerException("A test message"));
