@@ -59,8 +59,8 @@ public class NotifyDeveloperHandler extends Handler {
                 }
             }
         });
-        this.emailSubject = context.getString(R.string.email_subject) + context.getPackageName();
-        this.emailBody = context.getString(R.string.email_extra_text);
+        this.emailSubject = context.getString(R.string.slf4android_email_subject) + context.getPackageName();
+        this.emailBody = context.getString(R.string.slf4android_email_extra_text);
     }
 
     private void beginPublishOnMainThread(LogRecord record) {

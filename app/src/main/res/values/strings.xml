@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="email_subject">Error in:&#160;</string>
-    <string name="email_extra_text">Please provide a description of an error:\n</string>
+    <string name="slf4android_email_subject">Error in:&#160;</string>
+    <string name="slf4android_email_extra_text">Please provide a description of an error:\n</string>
 </resources>
