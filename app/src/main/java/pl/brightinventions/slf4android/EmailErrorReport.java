@@ -19,11 +19,15 @@ class EmailErrorReport {
     private static final Logger LOG = LoggerFactory.getLogger(EmailErrorReport.class.getSimpleName());
     private final List<String> emailAddresses;
     private String message;
+    private String emailSubject;
+    private String emailBody;
     private List<AsyncTask<?, ?, File>> attachments = new ArrayList<AsyncTask<?, ?, File>>();
 
-    EmailErrorReport(String message, List<String> emailAddresses) {
+    EmailErrorReport(String message, List<String> emailAddresses, String emailSubject, String emailBody) {
         this.message = message;
         this.emailAddresses = emailAddresses;
+        this.emailSubject = emailSubject;
+        this.emailBody = emailBody;
     }
 
     public void addFileAttachmentFrom(AsyncTask<?, ?, File> attachment) {
@@ -36,12 +40,12 @@ class EmailErrorReport {
         sendEmail.putExtra(Intent.EXTRA_EMAIL, emails);
     }
 
-    public void configureSubject(Intent sendEmail, Context subject) {
-        sendEmail.putExtra(Intent.EXTRA_SUBJECT, "Error in: " + subject.getPackageName());
+    public void configureSubject(Intent sendEmail) {
+        sendEmail.putExtra(Intent.EXTRA_SUBJECT, emailSubject);
     }
 
     public void configureMessage(Intent sendEmail) {
-        sendEmail.putExtra(Intent.EXTRA_TEXT, "Please provide a description of an error:\n" + message);
+        sendEmail.putExtra(Intent.EXTRA_TEXT, emailBody + message);
     }
 
     public void configureAttachments(Intent sendEmail) {

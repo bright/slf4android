@@ -27,6 +27,8 @@ public class NotifyDeveloperHandler extends Handler {
     private final List<String> emailAddress;
     private final WeakReference<ActivityStateListener> activityState;
     private final ShakeDetector shakeDetector;
+    private String emailSubject;
+    private String emailBody;
     private Filter filter;
     private AlertDialog dialog;
     private android.os.Handler mailLoopHandler = new android.os.Handler(Looper.getMainLooper());
@@ -57,6 +59,8 @@ public class NotifyDeveloperHandler extends Handler {
                 }
             }
         });
+        this.emailSubject = context.getString(R.string.slf4android_email_subject) + context.getPackageName();
+        this.emailBody = context.getString(R.string.slf4android_email_extra_text);
     }
 
     private void beginPublishOnMainThread(LogRecord record) {
@@ -158,11 +162,16 @@ public class NotifyDeveloperHandler extends Handler {
             if (currentActivity != null) {
                 dialog = NotifyDeveloperDialogDisplayActivity.showDialogIn(currentActivity,
                         record,
-                        emailAddress, getAttachmentClassList());
+                        emailAddress,
+                        emailSubject,
+                        emailBody,
+                        getAttachmentClassList());
             } else {
                 Intent showDialogActivityIntent = NotifyDeveloperDialogDisplayActivity.showIntent(context,
                         record,
                         emailAddress,
+                        emailSubject,
+                        emailBody,
                         getAttachmentClassList());
                 context.startActivity(showDialogActivityIntent);
             }
@@ -176,5 +185,15 @@ public class NotifyDeveloperHandler extends Handler {
             }
             return activity;
         }
+    }
+
+    public NotifyDeveloperHandler withSubject(String subject){
+        this.emailSubject = subject;
+        return this;
+    }
+
+    public NotifyDeveloperHandler withBody(String body){
+        this.emailBody = body;
+        return this;
     }
 }
