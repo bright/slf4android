@@ -14,7 +14,7 @@ repositories {
 and then declare a dependency inside a module:
 ```groovy
 dependencies {
-    compile('pl.brightinventions:slf4android:0.0.4@aar'){
+    compile('pl.brightinventions:slf4android:0.0.10@aar'){
       transitive = true
     }
     //other dependencies
