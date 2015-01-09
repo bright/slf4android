@@ -5,10 +5,9 @@ version = "0.0.10"
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "pl.brightinventions.slf4android"
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 10
@@ -29,7 +28,9 @@ dependencies {
     androidTestCompile('junit:junit:4.11') {
         exclude module: 'hamcrest-core'
     }
-    androidTestCompile('org.robolectric:robolectric:2.3') {
+    androidTestCompile 'org.easytesting:fest-util:1.2.5'
+
+    androidTestCompile('org.robolectric:robolectric:2.4') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
         exclude module: 'httpclient'
