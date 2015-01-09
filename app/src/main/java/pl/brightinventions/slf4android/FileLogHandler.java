@@ -15,6 +15,7 @@ class FileLogHandler extends FileLogHandlerConfiguration {
     private FileHandler fileHandler;
     private FileHandlerConfigParams config;
     private FileHandlerExpose fileHandlerExpose;
+    private boolean triedInititializing;
 
     public FileLogHandler(Context context, LogRecordFormatter formatter) {
         this.config = FileHandlerConfigParams.defaults(context);
@@ -29,15 +30,16 @@ class FileLogHandler extends FileLogHandlerConfiguration {
     }
 
     private void ensureInitialized() {
-        if (fileHandler == null) {
+        if (!triedInititializing) {
             synchronized (this) {
-                if (fileHandler == null) {
+                if (!triedInititializing) {
                     try {
                         fileHandler = new FileHandler(config.fileName, config.limit, config.count, config.append);
                         fileHandler.setFormatter(config.getFormatterAdapter());
                     } catch (IOException e) {
                         Log.e(TAG, "Could not create FileHandler", e);
                     }
+                    triedInititializing = true;
                 }
             }
         }
@@ -46,25 +48,36 @@ class FileLogHandler extends FileLogHandlerConfiguration {
     @Override
     public Formatter getFormatter() {
         ensureInitialized();
-        return fileHandler.getFormatter();
+        if (fileHandler != null) {
+            return fileHandler.getFormatter();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void close() {
         ensureInitialized();
-        fileHandler.close();
+        if (fileHandler != null) {
+            fileHandler.close();
+        }
     }
 
     @Override
     public void flush() {
         ensureInitialized();
-        fileHandler.flush();
+        if (fileHandler != null) {
+            fileHandler.flush();
+        }
     }
 
     @Override
     public void publish(LogRecord record) {
         ensureInitialized();
-        fileHandler.publish(record);
+        if (fileHandler != null) {
+            fileHandler.publish(record);
+        }
+
     }
 
     @Override
@@ -78,6 +91,20 @@ class FileLogHandler extends FileLogHandlerConfiguration {
         if (fileHandler != null) {
             throw new IllegalStateException("You can only change configuration before file handler is added to logger");
         }
+    }
+
+    @Override
+    public FileLogHandlerConfiguration setRotateFilesCountLimit(int count) {
+        ensureNotInitialized();
+        config.count = count;
+        return this;
+    }
+
+    @Override
+    public FileLogHandlerConfiguration setLogFileSizeLimitInBytes(int maxFileSizeInBytes) {
+        ensureNotInitialized();
+        config.limit = maxFileSizeInBytes;
+        return this;
     }
 
     @Override
