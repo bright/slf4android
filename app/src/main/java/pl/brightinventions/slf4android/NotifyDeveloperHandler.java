@@ -196,4 +196,14 @@ public class NotifyDeveloperHandler extends Handler {
         this.emailBody = body;
         return this;
     }
+
+    /**
+     *
+     * @param shouldClear true if handler should clear logs before reading, false otherwise
+     * @return NotifyDeveloperHandler instance
+     */
+    public NotifyDeveloperHandler shouldClearLogcatBeforeReading(boolean shouldClear){
+        ReadLogcatEntriesAsyncTask.getConfiguration().clearLogcat(shouldClear);
+        return this;
+    }
 }
