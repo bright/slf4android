@@ -11,6 +11,14 @@ import java.io.IOException;
 
 class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
     private static final Logger LOG = LoggerFactory.getLogger(ReadLogcatEntriesAsyncTask.class.getSimpleName());
+    private static LogcatReadingConfiguration LogcatReadingConfig;
+
+    public static synchronized LogcatReadingConfiguration getConfiguration() {
+        if(LogcatReadingConfig == null){
+            LogcatReadingConfig = new LogcatReadingConfiguration();
+        }
+        return LogcatReadingConfig;
+    }
 
     @Override
     protected File doInBackground(Context... params) {
@@ -34,8 +42,11 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
                     if (exitCode != 0) {
                         LOG.warn("Command {} returned with code {}", readLogcatCommand, exitCode);
                     } else {
-                        LOG.info("Dumped logcat entries to {} with size {} KB - will now clear it", fullPath, tempFile.length() / 1024);
-                        runtime.exec("logcat -c");
+                        LOG.info("Dumped logcat entries to {} with size {} KB", fullPath, tempFile.length() / 1024);
+                        if(LogcatReadingConfig.shouldClear()) {
+                            LOG.info("Will now clear logcat entries");
+                            runtime.exec("logcat -c");
+                        }
                     }
                 } catch (IOException e) {
                     LOG.warn("Error dumping logcat entries to {}", fullPath, e);

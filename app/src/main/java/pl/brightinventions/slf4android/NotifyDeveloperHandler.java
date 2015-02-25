@@ -42,8 +42,8 @@ public class NotifyDeveloperHandler extends Handler {
         this.context = context;
         this.emailAddress = Lists.newArrayList(emailAddress);
         this.filter = new AtLeastFilter(minLevel);
-        this.activityState = new WeakReference<ActivityStateListener>(stateListener);
-        this.attachmentClassList = new ArrayList<String>();
+        this.activityState = new WeakReference<>(stateListener);
+        this.attachmentClassList = new ArrayList<>();
         this.shakeDetector = new ShakeDetector(new ShakeDetector.Listener() {
             @Override
             public void hearShake() {
@@ -115,9 +115,7 @@ public class NotifyDeveloperHandler extends Handler {
         }
         try {
             attachmentClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new IllegalArgumentException("Can't create attachment factory from class " + attachmentClass, e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalArgumentException("Can't create attachment factory from class " + attachmentClass, e);
         }
         attachmentClassList.add(attachmentClass.getName());
@@ -141,6 +139,25 @@ public class NotifyDeveloperHandler extends Handler {
 
     private ArrayList<String> getAttachmentClassList() {
         return attachmentClassList;
+    }
+
+    public NotifyDeveloperHandler withSubject(String subject){
+        this.emailSubject = subject;
+        return this;
+    }
+
+    public NotifyDeveloperHandler withBody(String body) {
+        this.emailBody = body;
+        return this;
+    }
+
+    /**
+     * @param shouldClear true if handler should clear logs after they are read. This makes it easier to interpret different error notifications.
+     * @return NotifyDeveloperHandler instance
+     */
+    public NotifyDeveloperHandler shouldClearLogcatAfterSuccessfulRead(boolean shouldClear) {
+        ReadLogcatEntriesAsyncTask.getConfiguration().clearLogcat(shouldClear);
+        return this;
     }
 
     private class ShowDialogBecauseOfRecord implements Runnable {
@@ -185,15 +202,5 @@ public class NotifyDeveloperHandler extends Handler {
             }
             return activity;
         }
-    }
-
-    public NotifyDeveloperHandler withSubject(String subject){
-        this.emailSubject = subject;
-        return this;
-    }
-
-    public NotifyDeveloperHandler withBody(String body){
-        this.emailBody = body;
-        return this;
     }
 }
