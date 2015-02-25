@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-version = "0.0.12"
+version = "0.0.13"
 
 
 android {
@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 12
+        versionCode 13
         versionName version
     }
 
