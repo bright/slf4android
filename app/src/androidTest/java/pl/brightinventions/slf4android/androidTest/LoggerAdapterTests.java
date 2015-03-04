@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 
 import pl.brightinventions.slf4android.LogLevel;
 import pl.brightinventions.slf4android.LoggerConfiguration;
@@ -26,7 +24,6 @@ public class LoggerAdapterTests extends AndroidTestCase {
     public void setUp() throws Exception {
         super.setUp();
         LoggerConfiguration.resetConfigurationToDefault();
-        LogManager.getLogManager().getLogger("").setLevel(Level.FINEST);
         clearLogcat();
     }
 
@@ -98,6 +95,7 @@ public class LoggerAdapterTests extends AndroidTestCase {
     }
 
     public void test_info_message_when_level_is_set_to_warning() {
+        LoggerConfiguration.resetConfigurationToDefault();
         LoggerConfiguration configuration = LoggerConfiguration.configuration();
         configuration.setRootLogLevel(LogLevel.WARNING);
         getLogger().info("info message with exception", new NullPointerException("Bad"));

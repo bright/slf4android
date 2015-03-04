@@ -4,7 +4,6 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 public class AndroidLoggerFactory implements ILoggerFactory {
 
@@ -28,7 +27,6 @@ public class AndroidLoggerFactory implements ILoggerFactory {
     private AndroidLoggerAdapter createLogger(String name) {
         LoggerConfiguration.ensureInitialized();
         java.util.logging.Logger logger = java.util.logging.Logger.getLogger(name);
-        logger.setLevel(Level.ALL);
         return new AndroidLoggerAdapter(logger);
     }
 
