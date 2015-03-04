@@ -11,8 +11,12 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
+import pl.brightinventions.slf4android.LogLevel;
+import pl.brightinventions.slf4android.LoggerConfiguration;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 public class LoggerAdapterTests extends AndroidTestCase {
 
@@ -21,6 +25,7 @@ public class LoggerAdapterTests extends AndroidTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        LoggerConfiguration.resetConfigurationToDefault();
         LogManager.getLogManager().getLogger("").setLevel(Level.FINEST);
         clearLogcat();
     }
@@ -90,5 +95,14 @@ public class LoggerAdapterTests extends AndroidTestCase {
 
         assertThat(lastMessage, containsString("error message"));
         assertThat(lastMessage, containsString("IllegalArgumentException"));
+    }
+
+    public void test_info_message_when_level_is_set_to_warning() {
+        LoggerConfiguration configuration = LoggerConfiguration.configuration();
+        configuration.setRootLogLevel(LogLevel.WARNING);
+        getLogger().info("info message with exception", new NullPointerException("Bad"));
+        String lastMessage = getLastMessage();
+        assertThat(lastMessage, not(containsString("info message with exception")));
+
     }
 }

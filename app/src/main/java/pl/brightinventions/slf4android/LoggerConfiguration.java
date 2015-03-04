@@ -83,7 +83,6 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return new FileLogHandler(context, formatter);
     }
 
-
     public static LoggerConfiguration configuration() {
         ensureInitialized();
         return configuration;
@@ -94,6 +93,19 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
             initialized = true;
             configureDefaults();
         }
+    }
+
+    public LoggerConfiguration setRootLogLevel(LogLevel level) {
+        return setLogLevel("", level);
+    }
+
+    /**
+     * Set log level for given logger name
+     */
+    public LoggerConfiguration setLogLevel(String loggerName, LogLevel level) {
+        Logger logger = LogManager.getLogManager().getLogger(loggerName);
+        logger.setLevel(level.getUtilLogLevel());
+        return this;
     }
 
     @Override

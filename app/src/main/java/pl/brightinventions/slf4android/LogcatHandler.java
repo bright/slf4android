@@ -41,6 +41,9 @@ public class LogcatHandler extends Handler {
 
     @Override
     public void publish(LogRecord record) {
+        if (!isLoggable(record)) {
+            return;
+        }
         pl.brightinventions.slf4android.LogRecord slfRecord = pl.brightinventions.slf4android.LogRecord.fromRecord(record);
         int level = slfRecord.getLogLevel().getAndroidLevel();
         String tag = record.getLoggerName();
