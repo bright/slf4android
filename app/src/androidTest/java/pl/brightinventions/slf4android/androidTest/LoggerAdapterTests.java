@@ -30,9 +30,7 @@ public class LoggerAdapterTests extends AndroidTestCase {
     private void clearLogcat() {
         try {
             Runtime.getRuntime().exec("logcat -c").waitFor();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -94,13 +92,46 @@ public class LoggerAdapterTests extends AndroidTestCase {
         assertThat(lastMessage, containsString("IllegalArgumentException"));
     }
 
-    public void test_info_message_when_level_is_set_to_warning() {
+    public void test_info_message_not_printed_when_level_is_set_to_warning() {
+        setLevelTo(LogLevel.WARNING);
+        getLogger().info("info message with exception", new NullPointerException("Bad"));
+        assertThat(getLastMessage(), not(containsString("info message with exception")));
+    }
+
+    private void setLevelTo(LogLevel level) {
         LoggerConfiguration.resetConfigurationToDefault();
         LoggerConfiguration configuration = LoggerConfiguration.configuration();
-        configuration.setRootLogLevel(LogLevel.WARNING);
-        getLogger().info("info message with exception", new NullPointerException("Bad"));
-        String lastMessage = getLastMessage();
-        assertThat(lastMessage, not(containsString("info message with exception")));
+        configuration.setRootLogLevel(level);
+    }
 
+    public void test_debug_message_not_printed_when_level_is_set_to_info() {
+        setLevelTo(LogLevel.INFO);
+        getLogger().debug("debug message with exception", new NullPointerException("Bad"));
+        assertThat(getLastMessage(), not(containsString("debug message with exception")));
+    }
+
+    public void test_trace_message_not_printed_when_level_is_set_to_info() {
+        setLevelTo(LogLevel.INFO);
+        getLogger().trace("new trace message with exception", new NullPointerException("Bad"));
+        assertThat(getLastMessage(), not(containsString("new trace message with exception")));
+    }
+
+    public void test_trace_message_not_printed_when_level_is_set_to_debug() {
+        setLevelTo(LogLevel.DEBUG);
+        getLogger().trace("trace message with exception", new NullPointerException("Bad"));
+        String lastMessage = getLastMessage();
+        assertThat(lastMessage, not(containsString("trace message with exception")));
+    }
+
+    public void test_error_message_printed_when_level_is_set_to_debug() {
+        setLevelTo(LogLevel.DEBUG);
+        getLogger().error("error message with exception", new NullPointerException("Bad"));
+        assertThat(getLastMessage(), containsString("error message with exception"));
+    }
+
+    public void test_warning_message_printed_when_level_is_set_to_debug() {
+        setLevelTo(LogLevel.DEBUG);
+        getLogger().error("new warning message with exception", new NullPointerException("Bad"));
+        assertThat(getLastMessage(), containsString("new warning message with exception"));
     }
 }
