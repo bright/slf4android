@@ -35,6 +35,9 @@ class HomeActivity extends Activity {
 ### Logging to a file
 To print messages to a separate file just add:
 ```java
-LoggerConfiguration.configuration().addHandlerToLogger("", LoggerConfiguration.fileLogHandler(this));
+FileLogHandlerConfiguration fileHandler = LoggerConfiguration.fileLogHandler(this)
+LoggerConfiguration.configuration().addHandlerToRootLogger(fileHandler);
+String logFileName = fileHandler.getCurrentFileName();
+// logFileName contains full path to logged file
 ```
 inside your custom `android.app.Application` `onCreate` method. This will create rotated log files inside `context.getApplicationInfo().dataDir` with a name derived from `context.getPackageName()` and a default message pattern `%date %level [%thread] %name - %message%newline`
