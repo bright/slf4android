@@ -32,6 +32,48 @@ class HomeActivity extends Activity {
     }
 }
 ```
+### Logging to Crashlytics
+[Crashlytics](https://get.fabric.io/crashlytics) has a nice feature of attaching log entries that were issued just before a crash. With slf4android it's easy to add a handler so that whenever a crash happens you get more insight as to what happened just before it.
+
+To achieve that you need a custom handler:
+```
+import com.crashlytics.android.Crashlytics;
+import java.util.logging.Handler;
+import pl.brightinventions.slf4android.LogRecord;
+import pl.brightinventions.slf4android.MessageValueSupplier;
+
+public class CrashlyticsLoggerHandler extends Handler {
+    MessageValueSupplier messageValueSupplier = new MessageValueSupplier();
+
+    @Override
+    public void publish(java.util.logging.LogRecord record) {
+        LogRecord logRecord = LogRecord.fromRecord(record);
+        StringBuilder messageBuilder = new StringBuilder();
+        messageValueSupplier.append(logRecord, messageBuilder);
+        String tag = record.getLoggerName();
+        int androidLogLevel = logRecord.getLogLevel().getAndroidLevel();
+        Crashlytics.log(androidLogLevel, tag, messageBuilder.toString());
+    }
+
+    @Override
+    public void close() {
+    }
+
+    @Override
+    public void flush() {
+    }
+}
+```
+
+That is added to root logger:
+```
+LoggerConfiguration.configuration()
+        .removeRootLogcatHandler()
+        .addHandlerToRootLogger(new CrashlyticsLoggerHandler());
+```
+Note that we remove a default logcat handler since Crashlytics will push messages to logcat too.
+
+
 ### Logging to a file
 To print messages to a separate file just add:
 ```java
