@@ -48,9 +48,7 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
                             runtime.exec("logcat -c");
                         }
                     }
-                } catch (IOException e) {
-                    LOG.warn("Error dumping logcat entries to {}", fullPath, e);
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     LOG.warn("Error dumping logcat entries to {}", fullPath, e);
                 }
             }
