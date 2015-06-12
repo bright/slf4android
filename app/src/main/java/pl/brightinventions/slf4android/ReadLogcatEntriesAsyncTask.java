@@ -13,13 +13,6 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
     private static final Logger LOG = LoggerFactory.getLogger(ReadLogcatEntriesAsyncTask.class.getSimpleName());
     private static LogcatReadingConfiguration LogcatReadingConfig;
 
-    public static synchronized LogcatReadingConfiguration getConfiguration() {
-        if(LogcatReadingConfig == null){
-            LogcatReadingConfig = new LogcatReadingConfiguration();
-        }
-        return LogcatReadingConfig;
-    }
-
     @Override
     protected File doInBackground(Context... params) {
         if (params == null || params.length == 0 || params[0] == null) {
@@ -35,22 +28,20 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
             String readLogcatCommand = String.format("logcat -v time -d -f %s", fullPath);
 
             Runtime runtime = Runtime.getRuntime();
-            if (runtime != null) {
-                try {
-                    Process process = runtime.exec(readLogcatCommand);
-                    int exitCode = process.waitFor();
-                    if (exitCode != 0) {
-                        LOG.warn("Command {} returned with code {}", readLogcatCommand, exitCode);
-                    } else {
-                        LOG.info("Dumped logcat entries to {} with size {} KB", fullPath, tempFile.length() / 1024);
-                        if(LogcatReadingConfig.shouldClear()) {
-                            LOG.info("Will now clear logcat entries");
-                            runtime.exec("logcat -c");
-                        }
+            try {
+                Process process = runtime.exec(readLogcatCommand);
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    LOG.warn("Command {} returned with code {}", readLogcatCommand, exitCode);
+                } else {
+                    LOG.info("Dumped logcat entries to {} with size {} KB", fullPath, tempFile.length() / 1024);
+                    if (getConfiguration().shouldClear()) {
+                        LOG.info("Will now clear logcat entries");
+                        runtime.exec("logcat -c");
                     }
-                } catch (IOException | InterruptedException e) {
-                    LOG.warn("Error dumping logcat entries to {}", fullPath, e);
                 }
+            } catch (IOException | InterruptedException e) {
+                LOG.warn("Error dumping logcat entries to {}", fullPath, e);
             }
 
             return tempFile;
@@ -58,5 +49,12 @@ class ReadLogcatEntriesAsyncTask extends AsyncTask<Context, Void, File> {
             LOG.warn("Error creating temp file, did you enable write permissions?", e);
             return null;
         }
+    }
+
+    public static synchronized LogcatReadingConfiguration getConfiguration() {
+        if(LogcatReadingConfig == null){
+            LogcatReadingConfig = new LogcatReadingConfiguration();
+        }
+        return LogcatReadingConfig;
     }
 }
