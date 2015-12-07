@@ -1,14 +1,8 @@
-package pl.brightinventions.slf4android.roboelectric;
+package pl.brightinventions.slf4android;
 
 import org.junit.Test;
 
 import java.util.logging.Level;
-
-import pl.brightinventions.slf4android.HandlerFormatterCompiler;
-import pl.brightinventions.slf4android.LogRecord;
-import pl.brightinventions.slf4android.LogRecordFormatter;
-import pl.brightinventions.slf4android.LoggerConfiguration;
-import pl.brightinventions.slf4android.MessageValueSupplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
