@@ -36,7 +36,7 @@ class HomeActivity extends Activity {
 [Crashlytics](https://get.fabric.io/crashlytics) has a nice feature of attaching log entries that were issued just before a crash. With slf4android it's easy to add a handler so that whenever a crash happens you get more insight as to what happened just before it.
 
 To achieve that you need a custom handler:
-```
+```java
 import com.crashlytics.android.Crashlytics;
 import java.util.logging.Handler;
 import pl.brightinventions.slf4android.LogRecord;
@@ -66,7 +66,7 @@ public class CrashlyticsLoggerHandler extends Handler {
 ```
 
 That is added to root logger:
-```
+```java
 LoggerConfiguration.configuration()
         .removeRootLogcatHandler()
         .addHandlerToRootLogger(new CrashlyticsLoggerHandler());
@@ -85,7 +85,7 @@ String logFileName = fileHandler.getCurrentFileName();
 inside your custom `android.app.Application` `onCreate` method. This will create rotated log files inside `context.getApplicationInfo().dataDir` with a name derived from `context.getPackageName()` and a default message pattern `%date %level [%thread] %name - %message%newline`
 
 To change the location of log file you can use:
-```
+```java
 FileLogHandlerConfiguration fileHandler = LoggerConfiguration.fileLogHandler(this);
 
 fileHandler.setFullFilePathPattern("/sdcard/your.package/my_log.%g.%u.log");
