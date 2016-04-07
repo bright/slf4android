@@ -3,18 +3,18 @@ slf4android
 
 A simple implementation of [slf4j api](http://www.slf4j.org/) using android `java.util.logging.*`. This means you can **easily hook in any existing** `java.util.logging.Handler` implementations. 
 
-To use this little gem you'll need to add `http://bright.github.io/maven-repo/` to your repositories:
+To use this little gem you'll need to add `https://jitpack.io` to your repositories:
 ```groovy
 repositories {
     maven {
-        url "http://bright.github.io/maven-repo/"
+        url "https://jitpack.io"
     }
 }
 ```
 and then declare a dependency inside a module:
 ```groovy
 dependencies {
-    compile('pl.brightinventions:slf4android:0.0.11@aar'){
+    compile('com.gitghub.bright:slf4android:0.1.0'){
       transitive = true
     }
     //other dependencies
