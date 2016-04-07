@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven' 
 
 group='com.github.bright'
-version = "0.1.2"
 
 
 android {
@@ -13,7 +12,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 14
-        versionName version
+        versionName "1.0"
     }
 
     packagingOptions {
