@@ -1,7 +1,5 @@
 package pl.brightinventions.slf4android;
 
-import android.text.TextUtils;
-
 public class HandlerFormatterCompiler {
     private final LoggerPatternConfiguration configuration;
 
