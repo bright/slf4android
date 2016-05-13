@@ -14,7 +14,7 @@ repositories {
 and then declare a dependency inside a module:
 ```groovy
 dependencies {
-    compile('com.gitghub.bright:slf4android:0.1.0'){
+    compile('com.github.bright:slf4android:0.1.3'){
       transitive = true
     }
     //other dependencies
