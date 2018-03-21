@@ -185,4 +185,11 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         logger.addHandler(handler);
         return logger;
     }
+
+    /**
+     * Use to compile patterns
+     */
+    public HandlerFormatterCompiler getCompiler(){
+        return this.compiler;
+    }
 }
