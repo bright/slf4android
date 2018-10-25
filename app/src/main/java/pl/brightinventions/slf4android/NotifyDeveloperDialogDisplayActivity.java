@@ -106,11 +106,7 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static void startTaskExecution(Context activityContext, AsyncTask<Context, Void, File> attachment) {
-        if (Build.VERSION.SDK_INT < 11) {
-            attachment.execute(activityContext);
-        } else {
-            attachment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, activityContext);
-        }
+        attachment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, activityContext);
     }
 
     private static void sendEmailWithError(Context activityContext, EmailErrorReport emailErrorReport) {
