@@ -9,5 +9,14 @@
         <activity
             android:name=".NotifyDeveloperDialogDisplayActivity"
             android:theme="@android:style/Theme.NoDisplay"/>
+        <provider
+            android:name=".Slf4AndroidLogFileProvider"
+            android:authorities="${applicationId}.slf4android.logs.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

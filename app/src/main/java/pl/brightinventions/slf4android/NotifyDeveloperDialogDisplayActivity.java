@@ -116,7 +116,7 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
         emailErrorReport.configureRecipients(sendEmail);
         emailErrorReport.configureSubject(sendEmail);
         emailErrorReport.configureMessage(sendEmail);
-        emailErrorReport.configureAttachments(sendEmail);
+        emailErrorReport.configureAttachments(sendEmail, activityContext);
 
         try {
             activityContext.startActivity(Intent.createChooser(sendEmail, "Send mail..."));
