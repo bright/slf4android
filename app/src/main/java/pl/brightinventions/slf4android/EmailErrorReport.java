@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.content.FileProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,22 +49,25 @@ class EmailErrorReport {
         sendEmail.putExtra(Intent.EXTRA_TEXT, emailBody + message);
     }
 
-    public void configureAttachments(Intent sendEmail) {
+    public void configureAttachments(Intent sendEmail, Context context) {
+        String authority = Slf4AndroidLogFileProvider.getAuthority(context);
+
         ArrayList<Uri> attachmentsUris = new ArrayList<Uri>();
         for (AsyncTask<?, ?, File> fileAttachmentSource : attachments) {
-            Uri uri = buildAttachmentUri(fileAttachmentSource);
+            Uri uri = buildAttachmentUri(fileAttachmentSource, context, authority);
             if (uri != null) {
                 attachmentsUris.add(uri);
             }
         }
         sendEmail.putParcelableArrayListExtra(Intent.EXTRA_STREAM, attachmentsUris);
+        sendEmail.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     }
 
-    private Uri buildAttachmentUri(AsyncTask<?, ?, File> attachmentTask) {
+    private Uri buildAttachmentUri(AsyncTask<?, ?, File> attachmentTask, Context context, String authority) {
         try {
             File file = attachmentTask.get(5, TimeUnit.SECONDS);
             if (file != null) {
-                return Uri.fromFile(file);
+                return FileProvider.getUriForFile(context, authority, file);
             } else {
                 LOG.warn("Attachment task {} returned null", attachmentTask.getClass().getSimpleName());
             }
@@ -73,6 +77,8 @@ class EmailErrorReport {
             LOG.warn("Error while waiting for attachment", e);
         } catch (TimeoutException e) {
             LOG.warn("Timed out while waiting for attachment", e);
+        } catch (IllegalArgumentException e) {
+            LOG.warn("The selected file can't be shared", e);
         }
         return null;
     }
