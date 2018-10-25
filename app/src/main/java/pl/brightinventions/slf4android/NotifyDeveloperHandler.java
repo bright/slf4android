@@ -115,7 +115,7 @@ public class NotifyDeveloperHandler extends Handler {
         }
         try {
             attachmentClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Can't create attachment factory from class " + attachmentClass, e);
         }
         attachmentClassList.add(attachmentClass.getName());
