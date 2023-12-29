@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.content.FileProvider;
+
+import androidx.core.content.FileProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

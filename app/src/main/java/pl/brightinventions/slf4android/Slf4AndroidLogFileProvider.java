@@ -1,7 +1,8 @@
 package pl.brightinventions.slf4android;
 
 import android.content.Context;
-import android.support.v4.content.FileProvider;
+
+import androidx.core.content.FileProvider;
 
 public class Slf4AndroidLogFileProvider extends FileProvider {
 

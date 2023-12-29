@@ -17,6 +17,7 @@ package pl.brightinventions.slf4android;
  */
 
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.logging.Handler;
@@ -40,6 +41,7 @@ public class LogcatHandler extends Handler {
     }
 
     @Override
+    @SuppressLint("WrongConstant")
     public void publish(LogRecord record) {
         if (!isLoggable(record)) {
             return;
@@ -50,6 +52,10 @@ public class LogcatHandler extends Handler {
 
         try {
             String message = logRecordFormatter.format(slfRecord);
+            /*
+             * Apparently, lint doesn't understand that getAndroidLevel() returns a valid Android
+             * log level value, hence the @SuppressLint("WrongConstant") above this method.
+             */
             Log.println(level, tag, message);
         } catch (RuntimeException e) {
             Log.e("LogcatHandler", "Error logging message.", e);
