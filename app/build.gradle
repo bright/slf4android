@@ -24,6 +24,12 @@ android {
 
     useLibrary 'android.test.runner'
     useLibrary 'android.test.base'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 }
 
 dependencies {
