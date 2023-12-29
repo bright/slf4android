@@ -1,8 +1,7 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
-
-group='com.github.bright'
 
 android {
     namespace "pl.brightinventions.slf4android"
@@ -13,6 +12,12 @@ android {
     defaultConfig {
         minSdkVersion 14
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
     }
 
     packagingOptions {
@@ -62,5 +67,19 @@ dependencies {
         exclude module: 'wagon-file'
         exclude module: 'wagon-http-lightweight'
         exclude module: 'wagon-provider-api'
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.github.bright'
+            artifactId = 'slf4android'
+            version = '1.0'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
     }
 }
