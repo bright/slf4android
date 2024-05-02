@@ -30,7 +30,7 @@ public class NotifyDeveloperHandlerTests extends ActivityTestRule<TestActivity> 
         LoggerConfiguration.resetConfigurationToDefault();
         LoggerConfiguration configuration = LoggerConfiguration.configuration();
         Application targetContext = (Application) getInstrumentation().getTargetContext().getApplicationContext();
-        handler = configuration.notifyDeveloperHandler(targetContext, "piotr.mionskowski@gmail.com");
+        handler = NotifyDeveloperHandler.create(targetContext, "piotr.mionskowski@gmail.com");
         configuration.addHandlerToLogger("", handler);
         LOG = LoggerFactory.getLogger(getClass().getSimpleName());
     }

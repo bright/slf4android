@@ -77,7 +77,7 @@ Note that we remove a default logcat handler since Crashlytics will push message
 ### Logging to a file
 To print messages to a separate file just add:
 ```java
-FileLogHandlerConfiguration fileHandler = LoggerConfiguration.fileLogHandler(this);
+FileLogHandlerConfiguration fileHandler = FileLogHandlerConfiguration.create(this);
 LoggerConfiguration.configuration().addHandlerToRootLogger(fileHandler);
 String logFileName = fileHandler.getCurrentFileName();
 // logFileName contains full path to logged file
@@ -86,7 +86,7 @@ inside your custom `android.app.Application` `onCreate` method. This will create
 
 To change the location of log file you can use:
 ```java
-FileLogHandlerConfiguration fileHandler = LoggerConfiguration.fileLogHandler(this);
+FileLogHandlerConfiguration fileHandler = FileLogHandlerConfiguration.create(this);
 
 fileHandler.setFullFilePathPattern("/sdcard/your.package/my_log.%g.%u.log");
 

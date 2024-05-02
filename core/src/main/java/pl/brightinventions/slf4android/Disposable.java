@@ -1,5 +1,5 @@
 package pl.brightinventions.slf4android;
 
-interface Disposable {
+public interface Disposable {
     void dispose();
 }

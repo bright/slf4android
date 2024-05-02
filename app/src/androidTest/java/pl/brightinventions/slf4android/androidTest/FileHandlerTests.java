@@ -28,7 +28,7 @@ public class FileHandlerTests {
     @Before
     public void setUp() {
         LoggerConfiguration.resetConfigurationToDefault();
-        handler = LoggerConfiguration.fileLogHandler(getInstrumentation().getContext());
+        handler = FileLogHandlerConfiguration.create(getInstrumentation().getContext());
         LoggerConfiguration.configuration().addHandlerToLogger(getClass().getSimpleName(), handler);
         LOG = LoggerFactory.getLogger(getClass().getSimpleName());
     }
