@@ -9,4 +9,10 @@
         android:layout_height="wrap_content"
         android:text="Hello" />
 
+    <Button
+        android:id="@+id/log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log" />
+
 </LinearLayout>

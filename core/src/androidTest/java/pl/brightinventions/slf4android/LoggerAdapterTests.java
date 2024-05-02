@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android.androidTest;
+package pl.brightinventions.slf4android;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import pl.brightinventions.slf4android.LogLevel;
-import pl.brightinventions.slf4android.LoggerConfiguration;
 
 public class LoggerAdapterTests {
 
@@ -141,7 +138,7 @@ public class LoggerAdapterTests {
     @Test
     public void test_warning_message_printed_when_level_is_set_to_debug() {
         setLevelTo(LogLevel.DEBUG);
-        getLogger().error("new warning message with exception", new NullPointerException("Bad"));
+        getLogger().warn("new warning message with exception", new NullPointerException("Bad"));
         assertThat(getLastMessage(), containsString("new warning message with exception"));
     }
 }
