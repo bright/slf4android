@@ -35,9 +35,15 @@ android {
             languageVersion = JavaLanguageVersion.of(17)
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
+    api project(':core')
     implementation 'androidx.core:core:1.12.0'
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'com.squareup:seismic:1.0.2'

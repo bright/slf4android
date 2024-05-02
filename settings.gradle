@@ -3,3 +3,5 @@ plugins {
 }
 
 include ':app'
+include ':core'
+include ':testapp'
