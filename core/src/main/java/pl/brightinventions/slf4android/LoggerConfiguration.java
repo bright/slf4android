@@ -1,10 +1,5 @@
 package pl.brightinventions.slf4android;
 
-import android.annotation.TargetApi;
-import android.app.Application;
-import android.content.Context;
-import android.os.Build;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Handler;
@@ -18,7 +13,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
     private final ArrayList<Disposable> disposeThingsOnReset = new ArrayList<Disposable>();
     private final HandlerFormatterCompiler compiler;
 
-    public LoggerConfiguration() {
+    LoggerConfiguration() {
         compiler = new HandlerFormatterCompiler(this);
     }
 
@@ -30,7 +25,15 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return configuration;
     }
 
-    private void dispose() {
+    /**
+     * Registers a {@link Disposable} that will be disposed upon
+     * {@link #resetConfigurationToDefault() configuration reset}.
+     */
+    public synchronized void registerDisposable(Disposable disposable) {
+        disposeThingsOnReset.add(disposable);
+    }
+
+    private synchronized void dispose() {
         for (Disposable dispose : disposeThingsOnReset) {
             dispose.dispose();
         }
@@ -86,17 +89,6 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         return rootLogger;
     }
 
-    /**
-     * Creates a {@link pl.brightinventions.slf4android.FileLogHandlerConfiguration} logger handler.
-     * The returned new instance should be added to some logger with {@link #addHandlerToLogger(String, java.util.logging.Handler)}
-     *
-     * @return A new instance of {@link pl.brightinventions.slf4android.FileLogHandlerConfiguration}.
-     */
-    public static FileLogHandlerConfiguration fileLogHandler(Context context) {
-        LogRecordFormatter formatter = configuration().compiler.compile("%date %level [%thread] %name - %message%newline");
-        return new FileLogHandler(context, formatter);
-    }
-
     public static LoggerConfiguration configuration() {
         ensureInitialized();
         return configuration;
@@ -137,37 +129,15 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         }
         return this;
     }
+    /*
 
-    public NotifyDeveloperHandler notifyDeveloperHandler(final Application context, String email) {
-        final ActivityStateListener stateListener = getStateListener(context);
-        ArrayList<String> emails = new ArrayList<String>();
-        emails.add(email);
-        NotifyDeveloperHandler handler = new NotifyDeveloperHandler(context, emails, stateListener);
-        handler.addAttachmentClass(ReadLogcatEntriesAsyncTask.class);
-        handler.addAttachmentClass(MakeScreenShotAsyncTask.class);
-        return handler;
-    }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private ActivityStateListener getStateListener(final Application context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            final ActivityStateListener stateListener = new ActivityStateListener();
-            disposeThingsOnReset.add(new Disposable() {
-                @Override
-                public void dispose() {
-                    context.unregisterActivityLifecycleCallbacks(stateListener);
-                }
-            });
-            context.registerActivityLifecycleCallbacks(stateListener);
-            return stateListener;
-        }
-        return null;
-    }
+     */
 
     /**
      * Adds given {@code handler} to logger named {@code loggerName}.
      *
-     * @return A {@link java.util.logging.Logger} named {@code loggerName}.
+     * @return A {@link Logger} named {@code loggerName}.
      */
     public Logger addHandlerToLogger(String loggerName, Handler handler) {
         Logger logger = Logger.getLogger(loggerName);
@@ -178,7 +148,7 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
     /**
      * Adds given {@code handler} to root logger.
      *
-     * @return The root {@link java.util.logging.Logger}.
+     * @return The root {@link Logger}.
      */
     public Logger addHandlerToRootLogger(Handler handler) {
         Logger logger = Logger.getLogger("");

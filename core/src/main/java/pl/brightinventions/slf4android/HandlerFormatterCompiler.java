@@ -3,7 +3,7 @@ package pl.brightinventions.slf4android;
 public class HandlerFormatterCompiler {
     private final LoggerPatternConfiguration configuration;
 
-    public HandlerFormatterCompiler(LoggerPatternConfiguration configuration) {
+    HandlerFormatterCompiler(LoggerPatternConfiguration configuration) {
         this.configuration = configuration;
     }
 

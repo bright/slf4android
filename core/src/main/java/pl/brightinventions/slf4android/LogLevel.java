@@ -33,7 +33,7 @@ public enum LogLevel {
     }
 
     /**
-     * Converts a {@link pl.brightinventions.slf4android.LogLevel} logging level into an Android one.
+     * Converts a {@link LogLevel} logging level into an Android one.
      *
      * @return The resulting Android logging level.
      */
@@ -42,9 +42,9 @@ public enum LogLevel {
     }
 
     /**
-     * Converts a {@link pl.brightinventions.slf4android.LogLevel} logging level into a {@link java.util.logging.Level}.
+     * Converts a {@link LogLevel} logging level into a {@link Level}.
      *
-     * @return The resulting {@link java.util.logging.Level}.
+     * @return The resulting {@link Level}.
      */
     public Level getUtilLogLevel() {
         return utilLogLevel;

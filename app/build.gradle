@@ -10,7 +10,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,9 +44,10 @@ android {
 
 dependencies {
     api project(':core')
-    implementation 'androidx.core:core:1.12.0'
-    implementation 'org.slf4j:slf4j-api:1.7.36'
+
+    implementation 'androidx.core:core:1.13.1'
     implementation 'com.squareup:seismic:1.0.2'
+
     androidTestImplementation 'org.hamcrest:hamcrest-core:1.3'
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
     androidTestImplementation('junit:junit:4.13.2')
@@ -79,8 +80,8 @@ dependencies {
 publishing {
     publications {
         release(MavenPublication) {
-            groupId = 'com.github.bright'
-            artifactId = 'slf4android'
+            groupId = 'com.github.bright.slf4android'
+            artifactId = 'slf4android-extras'
             version = '1.0'
 
             afterEvaluate {

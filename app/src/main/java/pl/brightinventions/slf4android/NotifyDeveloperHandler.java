@@ -34,6 +34,27 @@ public class NotifyDeveloperHandler extends Handler {
     private android.os.Handler mailLoopHandler = new android.os.Handler(Looper.getMainLooper());
     private ArrayList<String> attachmentClassList;
 
+    public static NotifyDeveloperHandler create(final Application context, String email) {
+        final ActivityStateListener stateListener = getStateListener(context);
+        ArrayList<String> emails = new ArrayList<String>();
+        emails.add(email);
+        NotifyDeveloperHandler handler = new NotifyDeveloperHandler(context, emails, stateListener);
+        handler.addAttachmentClass(ReadLogcatEntriesAsyncTask.class);
+        handler.addAttachmentClass(MakeScreenShotAsyncTask.class);
+        return handler;
+    }
+
+    private static ActivityStateListener getStateListener(final Application context) {
+        final ActivityStateListener stateListener = new ActivityStateListener();
+
+        LoggerConfiguration.configuration().registerDisposable(() ->
+                context.unregisterActivityLifecycleCallbacks(stateListener)
+        );
+
+        context.registerActivityLifecycleCallbacks(stateListener);
+        return stateListener;
+    }
+
     NotifyDeveloperHandler(Application context, Iterable<String> emailAddress, ActivityStateListener activityState) {
         this(context, emailAddress, LogLevel.ERROR, activityState);
     }
@@ -141,7 +162,7 @@ public class NotifyDeveloperHandler extends Handler {
         return attachmentClassList;
     }
 
-    public NotifyDeveloperHandler withSubject(String subject){
+    public NotifyDeveloperHandler withSubject(String subject) {
         this.emailSubject = subject;
         return this;
     }
