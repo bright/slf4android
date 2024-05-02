@@ -27,9 +27,9 @@ android {
 
     buildTypes {
         release {
-            signingConfig
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -45,8 +45,17 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
-    implementation project(':core')
+    // Uncomment to use the artifacts from JitPack
+    //implementation 'com.github.azabost.slf4android:slf4android-extras:d2b8a59587'
+    implementation 'com.github.azabost.slf4android:slf4android:d2b8a59587'
+
+    // Uncomment to use the local modules
+    //implementation project(':core')
     //implementation project(':app')
 
     implementation 'androidx.core:core:1.13.1'
