@@ -7,6 +7,6 @@ public class TestActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(pl.brightinventions.slf4android.handler.notifydeveloper.androidTest.R.layout.test);
+        setContentView(pl.brightinventions.slf4android.handler.notifydeveloper.test.R.layout.test);
     }
 }

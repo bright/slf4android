@@ -1,14 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <meta-data
-            android:name="ignore"
-            android:value="ignore" />
-
-        <activity android:name=".androidTest.TestActivity" />
-
-        <activity
-            android:name=".NotifyDeveloperDialogDisplayActivity"
-            android:theme="@android:style/Theme.NoDisplay"/>
+        <activity android:name="pl.brightinventions.slf4android.handler.notifydeveloper.TestActivity" />
     </application>
 </manifest>
