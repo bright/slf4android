@@ -1,13 +1,11 @@
 package pl.brightinventions.slf4android.handler.notifydeveloper;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -108,7 +106,6 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
         return attachmentTasks;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static void startTaskExecution(Context activityContext, AsyncTask<Context, Void, File> attachment) {
         attachment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, activityContext);
     }
