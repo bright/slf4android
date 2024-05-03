@@ -1,14 +1,11 @@
 package pl.brightinventions.slf4android.handler.notifydeveloper;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 class ActivityStateListener implements Application.ActivityLifecycleCallbacks {
     private Activity lastUsedActivity;
     private Activity activeActivity;
