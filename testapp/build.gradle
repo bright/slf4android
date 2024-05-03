@@ -51,14 +51,13 @@ repositories {
 
 dependencies {
     // Uncomment to use the artifacts from JitPack
-    var slf4androidVersion = '7378c1016a'
-
-    implementation "com.github.azabost.slf4android:slf4android:$slf4androidVersion"
-    //implementation "com.github.azabost.slf4android:slf4android-handler-file-log:slf4androidVersion"
-    //implementation "com.github.azabost.slf4android:slf4android-handler-notify-developer:slf4androidVersion"
+    //var slf4androidVersion = '7378c1016a'
+    //implementation "com.github.bright.slf4android:slf4android:$slf4androidVersion"
+    //implementation "com.github.bright.slf4android:slf4android-handler-file-log:slf4androidVersion"
+    //implementation "com.github.bright.slf4android:slf4android-handler-notify-developer:slf4androidVersion"
 
     // Uncomment to use the local modules
-    //implementation project(':core')
+    implementation project(':core')
     //implementation project(':handler-file-log')
     //implementation project(':handler-notify-developer')
 
