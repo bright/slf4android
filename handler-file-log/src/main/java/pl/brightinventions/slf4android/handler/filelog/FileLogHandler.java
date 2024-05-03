@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android;
+package pl.brightinventions.slf4android.handler.filelog;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +12,8 @@ import java.util.logging.Filter;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import pl.brightinventions.slf4android.LogRecordFormatter;
 
 class FileLogHandler extends FileLogHandlerConfiguration {
     private static String TAG = FileLogHandler.class.getSimpleName();
