@@ -51,7 +51,9 @@ repositories {
 
 dependencies {
     // Uncomment to use the artifacts from JitPack
-    implementation 'com.github.azabost.slf4android:slf4android:d2b8a59587'
+    implementation 'com.github.azabost.slf4android:slf4android:7378c1016a'
+    //implementation 'com.github.azabost.slf4android:slf4android-handler-file-log:7378c1016a'
+    //implementation 'com.github.azabost.slf4android:slf4android-handler-notify-developer:7378c1016a'
 
     // Uncomment to use the local modules
     //implementation project(':core')
