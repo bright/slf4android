@@ -5,3 +5,4 @@ plugins {
 include ':app'
 include ':core'
 include ':testapp'
+include ':handler-file-log'

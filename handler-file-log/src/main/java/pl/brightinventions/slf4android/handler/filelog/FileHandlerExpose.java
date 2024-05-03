@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android;
+package pl.brightinventions.slf4android.handler.filelog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

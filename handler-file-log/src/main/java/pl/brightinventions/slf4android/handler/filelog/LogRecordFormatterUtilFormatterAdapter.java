@@ -1,7 +1,9 @@
-package pl.brightinventions.slf4android;
+package pl.brightinventions.slf4android.handler.filelog;
 
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+
+import pl.brightinventions.slf4android.LogRecordFormatter;
 
 class LogRecordFormatterUtilFormatterAdapter extends Formatter {
     private final LogRecordFormatter formatter;

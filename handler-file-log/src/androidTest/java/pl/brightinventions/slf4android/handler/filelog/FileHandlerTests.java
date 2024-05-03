@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android.androidTest;
+package pl.brightinventions.slf4android.handler.filelog;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import pl.brightinventions.slf4android.FileLogHandlerConfiguration;
 import pl.brightinventions.slf4android.LoggerConfiguration;
 
 public class FileHandlerTests {
