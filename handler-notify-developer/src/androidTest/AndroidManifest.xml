@@ -8,7 +8,7 @@
         <activity android:name=".androidTest.TestActivity" />
 
         <activity
-            android:name=".handler.notifydeveloper.NotifyDeveloperDialogDisplayActivity"
+            android:name=".NotifyDeveloperDialogDisplayActivity"
             android:theme="@android:style/Theme.NoDisplay"/>
     </application>
 </manifest>
