@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    namespace "pl.brightinventions.slf4android"
-    testNamespace "pl.brightinventions.slf4android.androidTest"
+    namespace "pl.brightinventions.slf4android.handler.notifydeveloper"
+    testNamespace "pl.brightinventions.slf4android.handler.notifydeveloper.androidTest"
 
     compileSdk 34
 
@@ -59,7 +59,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.bright.slf4android'
-            artifactId = 'slf4android-extras'
+            artifactId = 'slf4android-handler-notify-developer'
             version = '1.0'
 
             afterEvaluate {

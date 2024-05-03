@@ -51,12 +51,12 @@ repositories {
 
 dependencies {
     // Uncomment to use the artifacts from JitPack
-    //implementation 'com.github.azabost.slf4android:slf4android-extras:d2b8a59587'
     implementation 'com.github.azabost.slf4android:slf4android:d2b8a59587'
 
     // Uncomment to use the local modules
     //implementation project(':core')
-    //implementation project(':app')
+    //implementation project(':handler-file-log')
+    //implementation project(':handler-notify-developer')
 
     implementation 'androidx.core:core:1.13.1'
 

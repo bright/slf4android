@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android.androidTest;
+package pl.brightinventions.slf4android.handler.notifydeveloper;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 import pl.brightinventions.slf4android.LoggerConfiguration;
-import pl.brightinventions.slf4android.NotifyDeveloperHandler;
 
 public class NotifyDeveloperHandlerTests extends ActivityTestRule<TestActivity> {
 
