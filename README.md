@@ -14,10 +14,14 @@ repositories {
 and then declare a dependency inside a module:
 ```groovy
 dependencies {
-    compile('com.github.bright:slf4android:0.1.6'){
-      transitive = true
-    }
-    //other dependencies
+    // just SLF4J binding
+    implementation("com.github.bright.slf4android:slf4android:$slf4androidVersion")
+
+    // (optional) a handler for file logging 
+    implementation("com.github.bright.slf4android:slf4android-handler-file-log:$slf4androidVersion")
+
+    // (optional) a handler for notifying the developer in case of an error 
+    implementation("com.github.bright.slf4android:slf4android-handler-notify-developer:$slf4androidVersion")
 }
 ```
 As with any slf4j compatible implementation using slf4android looks like this:
