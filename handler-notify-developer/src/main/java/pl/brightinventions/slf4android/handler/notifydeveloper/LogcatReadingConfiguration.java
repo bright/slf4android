@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android;
+package pl.brightinventions.slf4android.handler.notifydeveloper;
 
 class LogcatReadingConfiguration {
     private boolean shouldClear;

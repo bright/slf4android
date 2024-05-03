@@ -1,4 +1,4 @@
-package pl.brightinventions.slf4android;
+package pl.brightinventions.slf4android.handler.notifydeveloper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,6 +15,10 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import pl.brightinventions.slf4android.Disposable;
+import pl.brightinventions.slf4android.LogRecord;
+import pl.brightinventions.slf4android.MessageValueSupplier;
 
 public class NotifyDeveloperDialogDisplayActivity extends Activity {
     private static final String TAG = NotifyDeveloperDialogDisplayActivity.class.getSimpleName();
