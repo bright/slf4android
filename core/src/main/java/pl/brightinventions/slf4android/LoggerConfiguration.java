@@ -1,5 +1,9 @@
 package pl.brightinventions.slf4android;
 
+import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Handler;
@@ -9,33 +13,40 @@ import java.util.logging.Logger;
 public class LoggerConfiguration implements LoggerPatternConfiguration {
     private static boolean initialized = false;
     private static LoggerConfiguration configuration;
-    private final ArrayList<LoggerPattern> loggerPatterns = new ArrayList<LoggerPattern>();
-    private final ArrayList<Disposable> disposeThingsOnReset = new ArrayList<Disposable>();
+    private final ArrayList<LoggerPattern> loggerPatterns = new ArrayList<>();
+    private final ArrayList<Closeable> thingsToCloseOnReset = new ArrayList<>();
     private final HandlerFormatterCompiler compiler;
+
+    private final org.slf4j.Logger logger;
 
     LoggerConfiguration() {
         compiler = new HandlerFormatterCompiler(this);
+        logger = LoggerFactory.getLogger(getClass().getSimpleName());
     }
 
     public static LoggerConfiguration resetConfigurationToDefault() {
         if (configuration != null) {
-            configuration.dispose();
+            configuration.close();
         }
         configureDefaults();
         return configuration;
     }
 
     /**
-     * Registers a {@link Disposable} that will be disposed upon
+     * Registers a {@link Closeable} that will be closed upon
      * {@link #resetConfigurationToDefault() configuration reset}.
      */
-    public synchronized void registerDisposable(Disposable disposable) {
-        disposeThingsOnReset.add(disposable);
+    public synchronized void registerCloseable(Closeable closeable) {
+        thingsToCloseOnReset.add(closeable);
     }
 
-    private synchronized void dispose() {
-        for (Disposable dispose : disposeThingsOnReset) {
-            dispose.dispose();
+    private synchronized void close() {
+        for (Closeable closeable : thingsToCloseOnReset) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                logger.error("Could not close {}", closeable, e);
+            }
         }
     }
 
@@ -129,10 +140,6 @@ public class LoggerConfiguration implements LoggerPatternConfiguration {
         }
         return this;
     }
-    /*
-
-
-     */
 
     /**
      * Adds given {@code handler} to logger named {@code loggerName}.

@@ -10,11 +10,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.brightinventions.slf4android.Disposable;
 import pl.brightinventions.slf4android.LogRecord;
 import pl.brightinventions.slf4android.MessageValueSupplier;
 
@@ -49,7 +50,7 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
         return alertDialog;
     }
 
-    private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, String emailSubject, String emailBody, Iterable<AsyncTask<Context, Void, File>> attachmentTasks, final Disposable onDialogClose) {
+    private static AlertDialog showDialogIn(final Context activityContext, final String message, final List<String> emailAddresses, String emailSubject, String emailBody, Iterable<AsyncTask<Context, Void, File>> attachmentTasks, final Closeable onDialogClose) {
         final EmailErrorReport emailErrorReport = new EmailErrorReport(message, emailAddresses, emailSubject, emailBody);
         for (AsyncTask<Context, Void, File> attachment : attachmentTasks) {
             startTaskExecution(activityContext, attachment);
@@ -69,23 +70,29 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         sendEmailWithError(activityContext, emailErrorReport);
                         dialog.dismiss();
-                        if (onDialogClose != null) {
-                            onDialogClose.dispose();
-                        }
+                        closeSafely(onDialogClose);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if (onDialogClose != null) {
-                            onDialogClose.dispose();
-                        }
+                        closeSafely(onDialogClose);
                     }
                 })
                 .create();
         alertDialog.show();
         return alertDialog;
+    }
+
+    private static void closeSafely(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Could not close " + closeable, e);
+            }
+        }
     }
 
     private static List<AsyncTask<Context, Void, File>> buildAttachmentFactories(Iterable<String> attachmentsClasses) {
@@ -147,9 +154,9 @@ public class NotifyDeveloperDialogDisplayActivity extends Activity {
         String emailBody = getIntent().getExtras().getString("email_body");
         List<AsyncTask<Context, Void, File>> attachmentTasks = buildAttachmentFactoriesFromIntent();
         if (log_record != null) {
-            dialog = showDialogIn(this, log_record, emailAddresses, emailSubject, emailBody, attachmentTasks, new Disposable() {
+            dialog = showDialogIn(this, log_record, emailAddresses, emailSubject, emailBody, attachmentTasks, new Closeable() {
                 @Override
-                public void dispose() {
+                public void close() {
                     finish();
                 }
             });

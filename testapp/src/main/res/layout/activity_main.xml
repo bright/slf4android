@@ -4,15 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello" />
-
     <Button
         android:id="@+id/log"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log" />
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset configuration" />
+
+    <Button
+        android:id="@+id/registerCloseable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register Closeable" />
+
+    <Button
+        android:id="@+id/registerFailingCloseable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register failing Closeable" />
 
 </LinearLayout>
