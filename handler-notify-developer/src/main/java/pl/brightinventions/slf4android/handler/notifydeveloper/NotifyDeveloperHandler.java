@@ -50,7 +50,7 @@ public class NotifyDeveloperHandler extends Handler {
     private static ActivityStateListener getStateListener(final Application context) {
         final ActivityStateListener stateListener = new ActivityStateListener();
 
-        LoggerConfiguration.configuration().registerDisposable(() ->
+        LoggerConfiguration.configuration().registerCloseable(() ->
                 context.unregisterActivityLifecycleCallbacks(stateListener)
         );
 

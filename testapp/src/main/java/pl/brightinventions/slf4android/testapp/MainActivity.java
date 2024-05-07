@@ -8,6 +8,10 @@ import androidx.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
+import pl.brightinventions.slf4android.LoggerConfiguration;
+
 public class MainActivity extends Activity {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class.getSimpleName());
@@ -24,5 +28,17 @@ public class MainActivity extends Activity {
             LOG.warn("warn");
             LOG.error("error");
         });
+        findViewById(R.id.reset).setOnClickListener((view) -> {
+            LoggerConfiguration.resetConfigurationToDefault();
+        });
+        findViewById(R.id.registerCloseable).setOnClickListener((view) -> {
+            LoggerConfiguration.configuration().registerCloseable(() -> LOG.info("Closing"));
+        });
+        findViewById(R.id.registerFailingCloseable).setOnClickListener((view) -> {
+            LoggerConfiguration.configuration().registerCloseable(() -> {
+                throw new IOException("Test");
+            });
+        });
+
     }
 }
